@@ -1,0 +1,466 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1
+					],
+					"jsonFile" : "directory-.-release-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.13"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						6,
+						7
+					]
+				},
+				{
+					"build" : "build_tmp",
+					"childIndexes" : 
+					[
+						2,
+						4,
+						6,
+						8,
+						9,
+						10,
+						15
+					],
+					"jsonFile" : "directory-build_tmp-release-8d0b5b0da024cddde314.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.13"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "hpm_sdk_localized_for_hpm5300_basic",
+					"targetIndexes" : 
+					[
+						3,
+						4,
+						5
+					]
+				},
+				{
+					"build" : "build_tmp/arch",
+					"childIndexes" : 
+					[
+						3
+					],
+					"jsonFile" : "directory-build_tmp.arch-release-84f97b4dc2a3d0b7436b.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.13"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 1,
+					"source" : "hpm_sdk_localized_for_hpm5300_basic/arch"
+				},
+				{
+					"build" : "build_tmp/arch/riscv/l1c",
+					"jsonFile" : "directory-build_tmp.arch.riscv.l1c-release-5d923aad426bde737118.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.13"
+					},
+					"parentIndex" : 2,
+					"projectIndex" : 1,
+					"source" : "hpm_sdk_localized_for_hpm5300_basic/arch/riscv/l1c"
+				},
+				{
+					"build" : "build_tmp/boards",
+					"childIndexes" : 
+					[
+						5
+					],
+					"jsonFile" : "directory-build_tmp.boards-release-0c635f89d16a5bc23583.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.13"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 1,
+					"source" : "hpm_sdk_localized_for_hpm5300_basic/boards"
+				},
+				{
+					"build" : "build_tmp/boards/hpm5300_basic",
+					"jsonFile" : "directory-build_tmp.boards.hpm5300_basic-release-8b9eeaa2e371974f13a4.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.13"
+					},
+					"parentIndex" : 4,
+					"projectIndex" : 1,
+					"source" : "D:/work/viva_test1/board/hpm5300_basic"
+				},
+				{
+					"build" : "build_tmp/soc",
+					"childIndexes" : 
+					[
+						7
+					],
+					"jsonFile" : "directory-build_tmp.soc-release-0c1c32d31c9cd6f798e0.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.13"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 1,
+					"source" : "hpm_sdk_localized_for_hpm5300_basic/soc"
+				},
+				{
+					"build" : "build_tmp/soc/HPM5300/HPM5361",
+					"jsonFile" : "directory-build_tmp.soc.HPM5300.HPM5361-release-6d658aec48b02230bac3.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.13"
+					},
+					"parentIndex" : 6,
+					"projectIndex" : 1,
+					"source" : "hpm_sdk_localized_for_hpm5300_basic/soc/HPM5300/HPM5361"
+				},
+				{
+					"build" : "build_tmp/drivers",
+					"jsonFile" : "directory-build_tmp.drivers-release-0a321fb9fe0be9b7b4ed.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.13"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 1,
+					"source" : "hpm_sdk_localized_for_hpm5300_basic/drivers"
+				},
+				{
+					"build" : "build_tmp/utils",
+					"jsonFile" : "directory-build_tmp.utils-release-de80eec5f9021a9318e1.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.13"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 1,
+					"source" : "hpm_sdk_localized_for_hpm5300_basic/utils"
+				},
+				{
+					"build" : "build_tmp/components",
+					"childIndexes" : 
+					[
+						11,
+						12,
+						13,
+						14
+					],
+					"jsonFile" : "directory-build_tmp.components-release-aa456c9384eed47cadbf.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.13"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 1,
+					"source" : "hpm_sdk_localized_for_hpm5300_basic/components"
+				},
+				{
+					"build" : "build_tmp/components/debug_console",
+					"jsonFile" : "directory-build_tmp.components.debug_console-release-9e9ad120fb14b2aef832.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.13"
+					},
+					"parentIndex" : 10,
+					"projectIndex" : 1,
+					"source" : "hpm_sdk_localized_for_hpm5300_basic/components/debug_console"
+				},
+				{
+					"build" : "build_tmp/components/usb/device",
+					"jsonFile" : "directory-build_tmp.components.usb.device-release-10dd468b87bdcd146946.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.13"
+					},
+					"parentIndex" : 10,
+					"projectIndex" : 1,
+					"source" : "hpm_sdk_localized_for_hpm5300_basic/components/usb/device"
+				},
+				{
+					"build" : "build_tmp/components/spi",
+					"jsonFile" : "directory-build_tmp.components.spi-release-72054d7c4a445548bfbe.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.13"
+					},
+					"parentIndex" : 10,
+					"projectIndex" : 1,
+					"source" : "hpm_sdk_localized_for_hpm5300_basic/components/spi"
+				},
+				{
+					"build" : "build_tmp/components/dma_mgr",
+					"jsonFile" : "directory-build_tmp.components.dma_mgr-release-632ff29d4c5c3838d4c7.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.13"
+					},
+					"parentIndex" : 10,
+					"projectIndex" : 1,
+					"source" : "hpm_sdk_localized_for_hpm5300_basic/components/dma_mgr"
+				},
+				{
+					"build" : "build_tmp/middleware",
+					"childIndexes" : 
+					[
+						16,
+						19,
+						20,
+						21,
+						22,
+						23
+					],
+					"jsonFile" : "directory-build_tmp.middleware-release-5cf2d1a53cb22a5fa01c.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.13"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 1,
+					"source" : "hpm_sdk_localized_for_hpm5300_basic/middleware"
+				},
+				{
+					"build" : "build_tmp/middleware/FreeRTOS",
+					"childIndexes" : 
+					[
+						17
+					],
+					"jsonFile" : "directory-build_tmp.middleware.FreeRTOS-release-1e8200dc97d9d890928c.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.13"
+					},
+					"parentIndex" : 15,
+					"projectIndex" : 1,
+					"source" : "hpm_sdk_localized_for_hpm5300_basic/middleware/FreeRTOS"
+				},
+				{
+					"build" : "build_tmp/middleware/FreeRTOS/Source",
+					"childIndexes" : 
+					[
+						18
+					],
+					"jsonFile" : "directory-build_tmp.middleware.FreeRTOS.Source-release-34fca12dff11a47d2dc1.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.13"
+					},
+					"parentIndex" : 16,
+					"projectIndex" : 1,
+					"source" : "hpm_sdk_localized_for_hpm5300_basic/middleware/FreeRTOS/Source"
+				},
+				{
+					"build" : "build_tmp/middleware/FreeRTOS/Source/portable",
+					"jsonFile" : "directory-build_tmp.middleware.FreeRTOS.Source.portable-release-b5ae202ee34db98be707.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.13"
+					},
+					"parentIndex" : 17,
+					"projectIndex" : 1,
+					"source" : "hpm_sdk_localized_for_hpm5300_basic/middleware/FreeRTOS/Source/portable"
+				},
+				{
+					"build" : "build_tmp/middleware/cherryusb",
+					"jsonFile" : "directory-build_tmp.middleware.cherryusb-release-5a203b9b0b5cfc22613e.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.13"
+					},
+					"parentIndex" : 15,
+					"projectIndex" : 1,
+					"source" : "hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb"
+				},
+				{
+					"build" : "build_tmp/middleware/eclipse_threadx",
+					"jsonFile" : "directory-build_tmp.middleware.eclipse_threadx-release-e126cffb803d50f3597b.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.13"
+					},
+					"parentIndex" : 15,
+					"projectIndex" : 1,
+					"source" : "hpm_sdk_localized_for_hpm5300_basic/middleware/eclipse_threadx"
+				},
+				{
+					"build" : "build_tmp/middleware/CMSIS",
+					"jsonFile" : "directory-build_tmp.middleware.CMSIS-release-eea6e2b326038ad3c7c6.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.13"
+					},
+					"parentIndex" : 15,
+					"projectIndex" : 1,
+					"source" : "hpm_sdk_localized_for_hpm5300_basic/middleware/CMSIS"
+				},
+				{
+					"build" : "build_tmp/middleware/ptpd",
+					"jsonFile" : "directory-build_tmp.middleware.ptpd-release-5445434fc6c1b0c62e51.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.13"
+					},
+					"parentIndex" : 15,
+					"projectIndex" : 1,
+					"source" : "hpm_sdk_localized_for_hpm5300_basic/middleware/ptpd"
+				},
+				{
+					"build" : "build_tmp/middleware/wifi",
+					"jsonFile" : "directory-build_tmp.middleware.wifi-release-50abcdf75e532ff683ed.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.13"
+					},
+					"parentIndex" : 15,
+					"projectIndex" : 1,
+					"source" : "hpm_sdk_localized_for_hpm5300_basic/middleware/wifi"
+				}
+			],
+			"name" : "release",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1
+					],
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "cherryusb_device_hid_keyboard_freertos",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						6,
+						7
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13,
+						14,
+						15,
+						16,
+						17,
+						18,
+						19,
+						20,
+						21,
+						22,
+						23
+					],
+					"name" : "hpm_sdk",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						3,
+						4,
+						5
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "app::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-app-release-77375955e3003a720560.json",
+					"name" : "app",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "demo.elf::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-demo.elf-release-5328b23f6ac4451e8040.json",
+					"name" : "demo.elf",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "distclean::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-distclean-release-f07b30621ea31bad0b02.json",
+					"name" : "distclean",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "hpm_sdk_gcc_lib::@dd6fcd45be7fd0b23a49",
+					"jsonFile" : "target-hpm_sdk_gcc_lib-release-00b30d614580f680c6ad.json",
+					"name" : "hpm_sdk_gcc_lib",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "hpm_sdk_gcc_startup_lib::@dd6fcd45be7fd0b23a49",
+					"jsonFile" : "target-hpm_sdk_gcc_startup_lib-release-b9b3a268dd1642feb729.json",
+					"name" : "hpm_sdk_gcc_startup_lib",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "hpm_sdk_lib::@dd6fcd45be7fd0b23a49",
+					"jsonFile" : "target-hpm_sdk_lib-release-ade4e9216c65f5b15ed0.json",
+					"name" : "hpm_sdk_lib",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "localize_sdk::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-localize_sdk-release-4864d54741e40a56b956.json",
+					"name" : "localize_sdk",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "unlocalize_sdk::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-unlocalize_sdk-release-4042dae7c9b1c9b6fcd0.json",
+					"name" : "unlocalize_sdk",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "D:/work/viva_test/app/keyboard_freertos/hpm5300_basic_flash_xip_release",
+		"source" : "D:/work/viva_test/app/keyboard_freertos"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 4
+	}
+}

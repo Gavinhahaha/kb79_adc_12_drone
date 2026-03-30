@@ -1,0 +1,372 @@
+{
+	"artifacts" : 
+	[
+		{
+			"path" : "output/demo.elf"
+		}
+	],
+	"backtrace" : 5,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_executable",
+			"include",
+			"find_package",
+			"add_subdirectory",
+			"target_link_libraries",
+			"sdk_ld_options",
+			"sdk_linker_global_symbols"
+		],
+		"files" : 
+		[
+			"hpm_sdk_localized_for_hpm5300_basic/cmake/application.cmake",
+			"D:/work/Data_folder/sdk_env_v1.9.0/hpm_sdk/cmake/hpm-sdk-config.cmake",
+			"CMakeLists.txt",
+			"hpm_sdk_localized_for_hpm5300_basic/cmake/cmake-ext.cmake",
+			"hpm_sdk_localized_for_hpm5300_basic/cmake/toolchain/ld.cmake",
+			"hpm_sdk_localized_for_hpm5300_basic/cmake/toolchain/gcc.cmake",
+			"hpm_sdk_localized_for_hpm5300_basic/cmake/toolchain.cmake"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 2
+			},
+			{
+				"command" : 2,
+				"file" : 2,
+				"line" : 28,
+				"parent" : 0
+			},
+			{
+				"file" : 1,
+				"parent" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 11,
+				"parent" : 2
+			},
+			{
+				"file" : 0,
+				"parent" : 3
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 30,
+				"parent" : 4
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 282,
+				"parent" : 4
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 79,
+				"parent" : 4
+			},
+			{
+				"file" : 6,
+				"parent" : 7
+			},
+			{
+				"command" : 1,
+				"file" : 6,
+				"line" : 233,
+				"parent" : 8
+			},
+			{
+				"file" : 5,
+				"parent" : 9
+			},
+			{
+				"command" : 1,
+				"file" : 5,
+				"line" : 16,
+				"parent" : 10
+			},
+			{
+				"file" : 4,
+				"parent" : 11
+			},
+			{
+				"command" : 5,
+				"file" : 4,
+				"line" : 4,
+				"parent" : 12
+			},
+			{
+				"command" : 4,
+				"file" : 3,
+				"line" : 184,
+				"parent" : 13
+			},
+			{
+				"command" : 5,
+				"file" : 4,
+				"line" : 5,
+				"parent" : 12
+			},
+			{
+				"command" : 4,
+				"file" : 3,
+				"line" : 184,
+				"parent" : 15
+			},
+			{
+				"command" : 5,
+				"file" : 4,
+				"line" : 6,
+				"parent" : 12
+			},
+			{
+				"command" : 4,
+				"file" : 3,
+				"line" : 184,
+				"parent" : 17
+			},
+			{
+				"command" : 5,
+				"file" : 4,
+				"line" : 7,
+				"parent" : 12
+			},
+			{
+				"command" : 4,
+				"file" : 3,
+				"line" : 184,
+				"parent" : 19
+			},
+			{
+				"command" : 5,
+				"file" : 5,
+				"line" : 19,
+				"parent" : 10
+			},
+			{
+				"command" : 4,
+				"file" : 3,
+				"line" : 184,
+				"parent" : 21
+			},
+			{
+				"command" : 5,
+				"file" : 5,
+				"line" : 20,
+				"parent" : 10
+			},
+			{
+				"command" : 4,
+				"file" : 3,
+				"line" : 184,
+				"parent" : 23
+			},
+			{
+				"command" : 5,
+				"file" : 5,
+				"line" : 21,
+				"parent" : 10
+			},
+			{
+				"command" : 4,
+				"file" : 3,
+				"line" : 184,
+				"parent" : 25
+			},
+			{
+				"command" : 6,
+				"file" : 0,
+				"line" : 265,
+				"parent" : 4
+			},
+			{
+				"command" : 4,
+				"file" : 3,
+				"line" : 85,
+				"parent" : 27
+			},
+			{
+				"command" : 6,
+				"file" : 0,
+				"line" : 270,
+				"parent" : 4
+			},
+			{
+				"command" : 4,
+				"file" : 3,
+				"line" : 85,
+				"parent" : 29
+			}
+		]
+	},
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 6,
+			"id" : "app::@6890427a1f51a3e7e1df"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "hpm_sdk_lib::@dd6fcd45be7fd0b23a49"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "hpm_sdk_gcc_lib::@dd6fcd45be7fd0b23a49"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "hpm_sdk_gcc_startup_lib::@dd6fcd45be7fd0b23a49"
+		}
+	],
+	"id" : "demo.elf::@6890427a1f51a3e7e1df",
+	"link" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "-O3 -DNDEBUG",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-Wl,-Map=D:/work/viva_test/app/keyboard_freertos/hpm5300_basic_flash_xip_release/output/demo.map",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-Wl,--whole-archive",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "lib\\libhpm_sdk_gcc_startup_lib.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "lib\\libhpm_sdk_gcc_lib.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "lib\\libhpm_sdk_lib.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-Wl,--no-whole-archive",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 14,
+				"fragment" : "-static",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 16,
+				"fragment" : "-nostartfiles",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 18,
+				"fragment" : "-Wl,--gc-sections",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 20,
+				"fragment" : "-Wl,--print-memory-usage",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 22,
+				"fragment" : "--specs=nano.specs",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 24,
+				"fragment" : "-u _printf_float",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 26,
+				"fragment" : "-u _scanf_float",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 28,
+				"fragment" : "-Xlinker --defsym=_heap_size=0x4000",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 30,
+				"fragment" : "-Xlinker --defsym=_stack_size=0x4000",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-Xlinker --defsym=_flash_size=1M",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-mabi=ilp32",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-march=rv32imac_zicsr_zifencei_zba_zbb_zbc_zbs",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 6,
+				"fragment" : "-T D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/soc/HPM5300/HPM5361/toolchains/gcc/flash_xip.ld",
+				"role" : "libraries"
+			}
+		],
+		"language" : "C"
+	},
+	"name" : "demo.elf",
+	"nameOnDisk" : "demo.elf",
+	"paths" : 
+	{
+		"build" : ".",
+		"source" : "."
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Object Libraries",
+			"sourceIndexes" : 
+			[
+				0,
+				1
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 5,
+			"isGenerated" : true,
+			"path" : "hpm5300_basic_flash_xip_release/CMakeFiles/app.dir/src/main.c.obj",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 5,
+			"isGenerated" : true,
+			"path" : "hpm5300_basic_flash_xip_release/CMakeFiles/app.dir/src/hid_keyboard.c.obj",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "EXECUTABLE"
+}

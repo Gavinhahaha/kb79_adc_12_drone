@@ -1,0 +1,88 @@
+# Prerequisites
+*.d
+
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Linker output
+*.ilk
+*.map
+*.exp
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+#*.lib
+#*.a
+*.la
+*.lo
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+#*.hex
+#*.bin
+*.GUAN
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# Kernel Module Compile Results
+*.mod*
+*.cmd
+*.html
+*.crf
+*.htm
+*.lnp
+*.TMP
+*.Bak
+# *.xml
+*.lst
+*.dep
+
+.tmp_versions/
+modules.order
+Module.symvers
+Mkfile.old
+dkms.conf
+*.ewd
+*.ewp
+*.emSession
+#*.icf
+*.eww
+*.scvd
+*.sct
+*.axf
+*.Administrator
+/all_hex/mg_triple_app_mojo68.hex
+/app/keyboard_freertos/hpm5300_basic_flash_xip_release/segger_embedded_studio/Output/Debug
+app/keyboard_freertos/hpm5300_basic_flash_xip_release/segger_embedded_studio/cherryusb_device_hid_keyboard_freertos - hpm5300_mojo68rt_Debug.jlink
+app/keyboard_freertos/hpm5300_basic_flash_xip_release/segger_embedded_studio/mojo68rt_Debug.jlink
+/app/keyboard_freertos/hpm5300_basic_flash_xip_release/segger_embedded_studio/*.emSession
+/app/keyboard_freertos/hpm5300_basic_flash_xip_release/segger_embedded_studio/*.emSession
+/.vscode
+/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/middleware/eclipse_threadx
+/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/middleware/ptpd
+/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/middleware/wifi
+/app/keyboard_freertos/hpm5300_basic_flash_xip_release/.cache
+/Gemini60.si4project
+/app/keyboard_freertos/hpm5300_basic_flash_xip_release/build_tmp
+/app/keyboard_freertos/hpm5300_basic_flash_xip_release/segger_embedded_studio/centauri60_Debug.jlink
+/app/keyboard_freertos/hpm5300_basic_flash_xip_release/segger_embedded_studio/centauri60.emSession
+/app/keyboard_freertos/hpm5300_basic_flash_xip_release/segger_embedded_studio/centauri60.json

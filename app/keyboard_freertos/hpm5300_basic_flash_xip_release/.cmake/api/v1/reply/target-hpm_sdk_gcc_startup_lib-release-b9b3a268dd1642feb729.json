@@ -1,0 +1,873 @@
+{
+	"archive" : {},
+	"artifacts" : 
+	[
+		{
+			"path" : "lib/libhpm_sdk_gcc_startup_lib.a"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"target_link_libraries",
+			"add_subdirectory"
+		],
+		"files" : 
+		[
+			"hpm_sdk_localized_for_hpm5300_basic/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 15,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 16,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 146,
+				"parent" : 0
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-O3 -DNDEBUG"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-Wall"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-Wundef"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-Wno-format"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-fomit-frame-pointer"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-fno-builtin"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-ffunction-sections"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-fdata-sections"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-O3"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-mabi=ilp32"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-march=rv32imac_zicsr_zifencei_zba_zbb_zbc_zbs"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 2,
+					"define" : "CONFIG_DISABLE_GLOBAL_IRQ_ON_STARTUP=1"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "CONFIG_FREERTOS=1"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "DISABLE_IRQ_PREEMPTIVE=1"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "FLASH_XIP=1"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_ACMP=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_ADC16=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_CRC=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_DAC=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_DMAMUX=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_DMAV2=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_EWDG=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_GPIO=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_GPIOM=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_GPTMR=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_I2C=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_IOC=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_KEYM=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_MBX=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_MCAN=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_MCHTMR=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_MMC=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_MON=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_OPAMP=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_OTP=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_PCFG=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_PDGO=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_PGPR=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_PLB=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_PLIC=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_PLICSW=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_PLLCTLV2=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_PMP=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_PPOR=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_PTPC=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_PWM=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_QEIV2=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_QEO=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_RDC=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_RNG=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_SDP=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_SEC=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_SEI=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_SPI=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_SYNT=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_SYSCTL=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_TRGM=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_TSNS=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_UART=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_USB=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "USE_DMA_MGR=1"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "USE_NONVECTOR_MODE=1"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "__freertos_irq_stack_top=_stack"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "portasmHAS_MTIME=1"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/middleware/FreeRTOS/Source/portable/GCC/RISC-V"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/middleware/FreeRTOS/Source/portable/GCC/RISC-V/chip_specific_extensions/HPMicro"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/arch/."
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/arch/riscv/l1c/."
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test1/board/hpm5300_basic/."
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/soc/HPM5300/HPM5361"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/soc/HPM5300/ip"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/soc/HPM5300/HPM5361/toolchains"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/soc/HPM5300/HPM5361/boot"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/drivers/inc"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/utils/."
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/components/debug_console/."
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/components/usb/device/."
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/components/spi/."
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/components/dma_mgr/."
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/middleware/FreeRTOS/Source/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb/common"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb/osal"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb/core"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb/class/cdc"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb/class/hid"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb/class/midi"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb/class/msc"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb/class/audio"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb/class/video"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb/class/hub"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb/class/wireless"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb/port/ehci"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm5300_basic_flash_xip_release/build_tmp/generated/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/../../../config"
+				}
+			],
+			"language" : "ASM",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-O3 -DNDEBUG"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-Wall"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-Wundef"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-Wno-format"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-fomit-frame-pointer"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-fno-builtin"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-ffunction-sections"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-fdata-sections"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-O3"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-mabi=ilp32"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-march=rv32imac_zicsr_zifencei_zba_zbb_zbc_zbs"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 2,
+					"define" : "CONFIG_DISABLE_GLOBAL_IRQ_ON_STARTUP=1"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "CONFIG_FREERTOS=1"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "DISABLE_IRQ_PREEMPTIVE=1"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "FLASH_XIP=1"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_ACMP=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_ADC16=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_CRC=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_DAC=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_DMAMUX=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_DMAV2=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_EWDG=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_GPIO=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_GPIOM=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_GPTMR=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_I2C=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_IOC=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_KEYM=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_MBX=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_MCAN=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_MCHTMR=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_MMC=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_MON=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_OPAMP=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_OTP=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_PCFG=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_PDGO=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_PGPR=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_PLB=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_PLIC=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_PLICSW=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_PLLCTLV2=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_PMP=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_PPOR=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_PTPC=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_PWM=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_QEIV2=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_QEO=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_RDC=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_RNG=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_SDP=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_SEC=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_SEI=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_SPI=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_SYNT=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_SYSCTL=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_TRGM=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_TSNS=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_UART=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "HPMSOC_HAS_HPMSDK_USB=y"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "USE_DMA_MGR=1"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "USE_NONVECTOR_MODE=1"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "__freertos_irq_stack_top=_stack"
+				},
+				{
+					"backtrace" : 2,
+					"define" : "portasmHAS_MTIME=1"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/middleware/FreeRTOS/Source/portable/GCC/RISC-V"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/middleware/FreeRTOS/Source/portable/GCC/RISC-V/chip_specific_extensions/HPMicro"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/arch/."
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/arch/riscv/l1c/."
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test1/board/hpm5300_basic/."
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/soc/HPM5300/HPM5361"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/soc/HPM5300/ip"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/soc/HPM5300/HPM5361/toolchains"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/soc/HPM5300/HPM5361/boot"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/drivers/inc"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/utils/."
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/components/debug_console/."
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/components/usb/device/."
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/components/spi/."
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/components/dma_mgr/."
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/middleware/FreeRTOS/Source/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb/common"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb/osal"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb/core"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb/class/cdc"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb/class/hid"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb/class/midi"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb/class/msc"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb/class/audio"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb/class/video"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb/class/hub"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb/class/wireless"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb/port/ehci"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/hpm5300_basic_flash_xip_release/build_tmp/generated/include"
+				},
+				{
+					"backtrace" : 2,
+					"path" : "D:/work/viva_test/app/keyboard_freertos/../../../config"
+				}
+			],
+			"language" : "C",
+			"sourceIndexes" : 
+			[
+				1
+			]
+		}
+	],
+	"id" : "hpm_sdk_gcc_startup_lib::@dd6fcd45be7fd0b23a49",
+	"name" : "hpm_sdk_gcc_startup_lib",
+	"nameOnDisk" : "libhpm_sdk_gcc_startup_lib.a",
+	"paths" : 
+	{
+		"build" : "build_tmp",
+		"source" : "hpm_sdk_localized_for_hpm5300_basic"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				1
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 0,
+			"path" : "hpm_sdk_localized_for_hpm5300_basic/soc/HPM5300/HPM5361/toolchains/gcc/start.S",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 3,
+			"compileGroupIndex" : 1,
+			"path" : "hpm_sdk_localized_for_hpm5300_basic/soc/HPM5300/HPM5361/toolchains/gcc/initfini.c",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "STATIC_LIBRARY"
+}

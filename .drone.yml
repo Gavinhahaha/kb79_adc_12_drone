@@ -1,0 +1,295 @@
+kind: pipeline
+type: docker
+name: minimal-test
+trusted: true
+
+steps:
+  # 步骤1：日志测试
+  - name: test
+    image: alpine:latest
+    pull: if-not-exists  # 关键：只有本地没有镜像时才拉取
+    commands:
+      - echo "✅ Runner已成功接收任务"
+      - echo "✅ 当前时间：$(date)"
+      
+  # 步骤2：编译C代码
+  - name: compile-c-code
+    image: docker.1ms.run/embeddedlinux/arm-none-eabi-gcc:11-20.04
+    pull: if-not-exists
+    user: root
+    working_dir: /drone/src/projects/n32g430_EVAL/examples/ADC_DMA/GCC
+    commands:
+      - echo "📌 当前目录：$(pwd)"
+      - chmod -R 777 /drone/src/
+      - mkdir -p Objects bin && rm -rf Objects/* bin/* 2>/dev/null || true
+      - arm-none-eabi-gcc --version
+      - make  -C /drone/src
+      - make made68 -C /drone/src # ✅ 成功
+      - make viva63 -C /drone/src # ✅ 成功
+      - make centauri60 -C /drone/src # ✅ 成功
+      - make centauri80 -C /drone/src # ✅ 成功
+      # ✅【关键调试】在这里打印文件列表，确认文件已生成
+      - echo "=== 检查步骤 2 生成的文件 ==="
+      - ls -la bin/
+      - ls -la bin/*.mg || echo "⚠️ 警告：没有找到 .mg 文件！"
+
+  # 步骤3：上传固件到 Gitea Packages (单循环 + 版本复用版)
+  - name: upload-to-gitea-packages
+    image: docker.1ms.run/curlimages/curl:latest
+    pull: if-not-exists
+    working_dir: /drone/src/projects/n32g430_EVAL/examples/ADC_DMA/GCC
+    depends_on:
+      - compile-c-code
+    environment:
+      GITEA_TOKEN:
+        from_secret: upload_pakage_gitea_token
+      GITEA_URL: "http://192.168.1.38:3000"
+      GITEA_OWNER: "mg_firmware" 
+      DRONE_COMMIT_SHA: "${DRONE_COMMIT_SHA:-test1234567890}"
+    commands:
+      - |
+        echo "=== 开始多文件上传流程 (版本复用版) ==="
+        
+        # 1. 基础校验
+        if [ -z "$GITEA_TOKEN" ]; then
+          echo "❌ ERROR: GITEA_TOKEN 为空!"
+          exit 1
+        fi
+
+        # 2. 【关键】按顺序收集文件：先 .mg 后 .bin
+        # 这样保证在后续循环中，先处理 .mg (设定版本)，再处理 .bin (复用版本)
+        ALL_FILES=""
+        
+        # 第一步：收集 .mg
+        for f in bin/SM_*.mg; do
+          [ -f "$f" ] && ALL_FILES="$ALL_FILES $f"
+        done
+        
+        # 第二步：收集 .bin
+        for f in bin/*.bin; do
+          [ -f "$f" ] && ALL_FILES="$ALL_FILES $f"
+        done
+
+        # 检查是否有文件
+        if [ -z "$ALL_FILES" ]; then
+          echo "❌ ERROR: 未找到任何 .mg 或 .bin 文件!"
+          ls -la bin/
+          exit 1
+        fi
+
+        echo "📦 发现文件列表 (已排序):$ALL_FILES"
+        echo ""
+
+        # 用于记忆上一个 .mg 文件的版本
+        LAST_MG_VERSION=""
+
+        # 3. 统一循环处理
+        for FILE_PATH in $ALL_FILES; do
+          [ -f "$FILE_PATH" ] || continue
+          
+          FILE_NAME=$(basename "$FILE_PATH")
+          echo "🚀 正在处理: $FILE_NAME"
+
+          # --- 根据后缀分支处理逻辑 ---
+          case "$FILE_NAME" in
+            *.mg)
+              # 【MG 逻辑】解析版本
+              DEV_NAME=$(echo "$FILE_NAME" | cut -d'_' -f2)
+              FW_VER=$(echo "$FILE_NAME" | cut -d'_' -f4)
+              
+              # 版本回退逻辑
+              if [ -z "$FW_VER" ] || [ "$FW_VER" = "0.0.0" ]; then
+                SHORT_SHA=$(echo "$DRONE_COMMIT_SHA" | cut -c1-8)
+                FW_VER="build-${SHORT_SHA}"
+                echo "   ⚠️ MG 版本回退至: $FW_VER"
+              fi
+              
+              # 🔄 关键动作：更新全局版本记忆变量
+              LAST_MG_VERSION="$FW_VER"
+              echo "   💾 已记录版本供后续 .bin 使用: $LAST_MG_VERSION"
+              
+              PACKAGE_NAME="firmware-$(echo "$DEV_NAME" | tr '[:upper:]' '[:lower:]')"
+              ;;
+              
+            *.bin)
+              # 【BIN 逻辑】尝试复用版本
+              BASE_NAME=$(echo "$FILE_NAME" | sed 's/\.bin$//')
+              echo "   📦 基础名: $BASE_NAME"
+              # export TZ=Asia/Shanghai
+              # TIME_STAMP=$(date +%Y%m%d%H%M%S)
+              #FILE_NAME="$(echo "$FILE_NAME" | sed 's/\.bin$//')_$(TZ=Asia/Shanghai date +%Y%m%d%H%M%S).bin"
+              FILE_NAME="$(echo "$FILE_NAME" | sed 's/\.bin$//')_$(TZ=GMT-8 date +%Y%m%d%H%M%S).bin"
+              # FILE_NAME="$(echo "$FILE_NAME" | sed 's/\.bin$//')_${TIME_STAMP}.bin"
+              PACKAGE_NAME="$BASE_NAME"
+              echo "   📦 包名: $PACKAGE_NAME"
+              
+              if [ -n "$LAST_MG_VERSION" ]; then
+                # ✅ 复用上一个 .mg 的版本
+                FW_VER="$LAST_MG_VERSION"
+                echo "   ♻️ 复用 .mg 版本: $FW_VER"
+              else
+                # ⚠️ 如果没有 .mg 先行，则使用默认构建版本
+                SHORT_SHA=$(echo "$DRONE_COMMIT_SHA" | cut -c1-8)
+                FW_VER="build-${SHORT_SHA}"
+                echo "   ⚠️ 未检测到前置 .mg 文件，使用默认版本: $FW_VER"
+              fi
+              DEV_NAME="$BASE_NAME"
+              ;;
+              
+            *)
+              echo "   ⚠️ 未知文件格式，跳过"
+              continue
+              ;;
+          esac
+
+          # --- 构建 URL (通用) ---
+          BASE_PART="$GITEA_URL/api/packages/$GITEA_OWNER/generic"
+          FULL_URL="$BASE_PART/$PACKAGE_NAME/$FW_VER/$FILE_NAME"
+
+          echo "   🏷️ 项目: $DEV_NAME"
+          echo "   📝 最终版本: $FW_VER"
+          echo "   📦 包名: $PACKAGE_NAME"
+          # 隐藏长 URL 以保持日志整洁，如需调试可取消注释
+          echo "   🔗 URL : $FULL_URL"
+
+          # --- 执行上传 (通用) ---
+          HTTP_CODE=$(curl -s -w "%{http_code}" -o /dev/null -X PUT \
+            -H "Authorization: token $GITEA_TOKEN" \
+            -T "$FILE_PATH" \
+            "$FULL_URL")
+
+          if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "201" ]; then
+            echo "   ✅ 上传成功 (HTTP $HTTP_CODE)"
+          else
+            echo "   ❌ 上传失败 (HTTP $HTTP_CODE)"
+            curl -v -X PUT \
+              -H "Authorization: token $GITEA_TOKEN" \
+              -T "$FILE_PATH" \
+              "$FULL_URL" 2>&1 | tail -n 5
+            exit 1
+          fi
+          echo ""
+        done
+
+        # ========== 新增：写入版本号到文件 ==========
+        # 把最终的版本号（LAST_MG_VERSION 或 回退版本）写入文件
+        if [ -n "$LAST_MG_VERSION" ]; then
+          echo "$LAST_MG_VERSION" > /drone/src/projects/n32g430_EVAL/examples/ADC_DMA/GCC/fw_version.txt
+          echo "📝 版本号已写入文件: $LAST_MG_VERSION"
+        else
+          # 若没有mg文件，用默认版本
+          SHORT_SHA=$(echo "$DRONE_COMMIT_SHA" | cut -c1-8)
+          DEFAULT_VER="build-${SHORT_SHA}"
+          echo "$DEFAULT_VER" > /drone/src/projects/n32g430_EVAL/examples/ADC_DMA/GCC/fw_version.txt
+          echo "📝 版本号已写入文件（默认）: $DEFAULT_VER"
+        fi
+
+        echo "🎉 所有固件上传完成!"
+
+
+  # 步骤4：发布固件（新增核心步骤）
+  - name: release-firmware
+    image: docker.1ms.run/curlimages/curl:latest
+    working_dir: /drone/src/projects/n32g430_EVAL/examples/ADC_DMA/GCC
+    # 依赖步骤3完成后再执行
+    depends_on:
+      - upload-to-gitea-packages
+    environment:
+      GITEA_TOKEN:
+        from_secret: drone_release_token
+      GITEA_URL: "http://192.168.1.38:3000"
+      GITEA_OWNER: "mg_firmware"
+      GITEA_REPO: "module_keyscan_01"
+      DRONE_BRANCH: "${DRONE_BRANCH:-main}"
+      DRONE_COMMIT_SHA: "${DRONE_COMMIT_SHA:-test1234567890}"
+      # 发布标题/描述可自定义
+      # RELEASE_TITLE: "SM_Firmware_${DRONE_BRANCH}_$(echo $DRONE_COMMIT_SHA | cut -c1-8)"
+      # RELEASE_NOTES: "Auto release by Drone CI - Commit: ${DRONE_COMMIT_SHA}"
+    commands:
+      - |
+        # ========== 核心修改：读取步骤3写入的版本号 ==========
+        if [ -f "./fw_version.txt" ]; then
+          FW_VER=$(cat ./fw_version.txt | tr -d '\r\n' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' -e 's/[^a-zA-Z0-9\.\-]//g')
+          echo "✅ 从文件读取到版本号: $FW_VER"
+        else
+          echo "❌ 未找到版本号文件，使用默认版本"
+          SHORT_SHA=$(echo "$DRONE_COMMIT_SHA" | cut -c1-8)
+          FW_VER="build-${SHORT_SHA}"
+        fi
+        # 强制校验版本号非空
+        if [ -z "$FW_VER" ]; then
+          echo "❌ 版本号为空，终止发布"
+          exit 1
+        fi
+        echo "🔍 最终版本号: $FW_VER"
+
+        # 1. 重置所有环境，清空FW_VER并重新赋值（避免缓存）
+        # unset FW_VER
+        # export FW_VER="1.2.7"
+
+        # 2. 一次性执行两段代码（同进程、同上下文）
+        # RELEASE_TITLE1='Firmware_'$FW_VER
+        # RELEASE_TITLE2="Firmware_$FW_VER"
+
+        # 3. 同时输出结果
+        # echo "单引号写法: [$RELEASE_TITLE1]"
+        # echo "双引号写法: [$RELEASE_TITLE2]"
+        
+        # 定义 Release 标题和描述
+        RELEASE_TITLE='Firmware_'$FW_VER
+        RELEASE_NOTES="Auto release by Drone CI
+        - Commit: ${DRONE_COMMIT_SHA}
+        - Branch: ${DRONE_BRANCH}
+        - Firmware Version: $FW_VER"
+        echo "=== 开始创建Gitea Release标签：$RELEASE_TITLE ==="
+        echo "$RELEASE_NOTES"
+
+        
+        
+        # 2. 校验发布必要变量
+        if [ -z "$GITEA_TOKEN" ]; then
+          echo "ERROR: GITEA_TOKEN is empty! Can not release."
+          exit 1
+        fi
+        
+        # 3. 构造Gitea Release API地址(创建正式Release)
+        RELEASE_API_URL="$GITEA_URL/api/v1/repos/$GITEA_OWNER/$GITEA_REPO/releases"
+        echo "Release API URL: $RELEASE_API_URL"
+        
+        # 4. 构造Release请求体(JSON格式)
+        RELEASE_BODY=$(cat << EOF
+        {
+          "tag_name": "$FW_VER",
+          "name": "$RELEASE_TITLE",
+          "body": "$RELEASE_NOTES",
+          "draft": false,
+          "prerelease": false,
+          "target_commitish": "$DRONE_BRANCH"
+        }
+        EOF
+        )
+        
+        # 5. 创建Gitea Release(正式发布)
+        echo "=== 创建Release ==="
+        RELEASE_RESPONSE=$(curl -X POST -H "Authorization: token $GITEA_TOKEN" \
+          -H "Content-Type: application/json" \
+          -d "$RELEASE_BODY" \
+          "$RELEASE_API_URL" -s)
+        
+        # 6. 验证Release创建结果
+        if echo "$RELEASE_RESPONSE" | grep -q "id"; then
+          echo "✅ 固件发布成功! Version: $FW_VER"
+          echo "Release详情: $RELEASE_RESPONSE"
+        else
+          echo "❌ 固件发布失败! Response: $RELEASE_RESPONSE"
+          exit 1
+        fi
+
+trigger:
+  event:
+    include:  # 缩进 2 个空格，属于 event 的子级
+      - custom  # 仅允许手动 custom 事件触发
+      # - push    # 代码push自动触发
+  branch:
+    include:  # 缩进 2 个空格，属于 branch 的子级
+      - main   # 仅允许 main 分支触发

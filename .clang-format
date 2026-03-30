@@ -1,0 +1,50 @@
+# .clang-format - 兼容 clang-format 6.0+
+BasedOnStyle: LLVM
+Language: Cpp
+
+# 大括号风格
+BreakBeforeBraces: Allman
+
+# 缩进
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+
+# 行宽
+ColumnLimit: 120
+
+# 禁止单行简写
+#AllowShortBlocksOnASingleLine: false
+AllowShortFunctionsOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+AllowAllArgumentsOnNextLine: false  # 禁止所有成员挤到同一行
+AllowShortBlocksOnASingleLine: Never # 禁止短初始化块单行显示（彻底杜绝紧凑写法）
+
+BinPackArguments: false    # 禁止初始化列表成员打包，强制每行一个
+BinPackParameters: false   # 兜底，避免成员挤行
+ConstructorInitializerAllOnOneLineOrOnePerLine: true  # 构造函数初始化每行一个（兜底）
+Cpp11BracedListStyle: false            # 禁用C++11紧凑花括号风格（对C结构体同样生效）
+
+BraceWrapping:
+  AfterStruct: false
+  AfterControlStatement: false
+  AfterFunction: false
+  AfterClass: false
+  AfterEnum: false
+  AfterUnion: false
+  BeforeElse: false
+
+# 控制语句空格
+SpaceBeforeParens: ControlStatements
+
+# 注释与 case
+AlignTrailingComments: true
+IndentCaseLabels: true
+
+# 空行控制
+MaxEmptyLinesToKeep: 1
+KeepEmptyLinesAtTheStartOfBlocks: false
+
+#头文件排序
+SortIncludes: false

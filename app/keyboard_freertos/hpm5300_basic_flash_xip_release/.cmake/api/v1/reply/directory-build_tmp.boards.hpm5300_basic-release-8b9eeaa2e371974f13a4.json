@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "build_tmp/boards/hpm5300_basic",
+		"source" : "D:/work/viva_test1/board/hpm5300_basic"
+	}
+}
