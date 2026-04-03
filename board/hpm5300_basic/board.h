@@ -25,10 +25,10 @@
 #define BOARD_UF2_SIGNATURE             (0x0A4D5048UL)
 
 #define BOARD_HIVE_VER                  (0x101)
-#define BOARD_FW_VERSION                (656)                  /* Firmware   Version     */
+#define BOARD_FW_VERSION                (672)                  /* Firmware   Version     */
 #define BOARD_HW_VERSION                (101)                  /* Hardware   Version     */
 
-#define BOARD_SM_FW_VERSION             (128)                  /* nation firmware version     */
+#define BOARD_SM_FW_VERSION             (669)                  /* nation firmware version     */
 
 #define BOARD_FW_FOR_FA                 (1)
 

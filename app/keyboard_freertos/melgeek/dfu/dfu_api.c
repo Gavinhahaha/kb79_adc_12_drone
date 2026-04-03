@@ -6,6 +6,7 @@
  */
 #include "dfu_api.h"
 #include "hal_flash.h"
+#include "hal_wdg.h"
 #include "hpm_romapi.h"
 #include "hpm_l1c_drv.h"
 #include "app_debug.h"
@@ -63,8 +64,6 @@ static void soc_reset(void)
 
 void ota_board_complete_reset(void)
 {
-    hpm_stat_t status;
-
     // if (current_addr != FLASH_APP1_ALL_IMG_ADDR && current_addr != FLASH_APP2_ALL_IMG_ADDR)
     //     return;
 
@@ -90,7 +89,6 @@ uint32_t ota_board_flash_size(uint8_t ota_index)
 
 hpm_stat_t ota_board_flash_erase(uint8_t ota_index)
 {
-    hpm_stat_t status;
     uint32_t addr, user_size = 0;
     if (ota_index == 0)
     {
@@ -159,7 +157,7 @@ void ota_board_header_write(uint8_t ota_index, user_fota_header_t *fota_header)
 int ota_fota_flash_checksum(uint32_t addr, uint32_t len, uint32_t *checksum)
 {
     hpm_stat_t status;
-    unsigned int i, j;
+    unsigned int i;
     unsigned int allsize = 0;
     unsigned int read_len;
     unsigned int tmp;
@@ -212,9 +210,7 @@ bool ota_board_auto_checksum(void)
 bool ota_board_auto_write(void const *src, uint32_t len)
 {
     static uint32_t offset = 0;
-    uint32_t checksum;
     uint8_t ota_index;
-    int ret = -1;
     user_fota_header_t *current_header = (user_fota_header_t *)src;
     if (current_header->magic == USER_UPGREAD_FLAG_MAGIC &&
         current_header->device == BOARD_DEVICE_ID)
@@ -261,7 +257,6 @@ bool ota_board_auto_write(void const *src, uint32_t len)
 uint8_t ota_check_current_otaindex(void)
 {
     hpm_stat_t status;
-    int read_len;
     uint32_t version = 0;
 
     uint16_t sw_version = *((uint16_t *)(FLASH_APP1_BOOT_HEAD_ADDR + FW_HEADER_SW_VERSION_OFFSET));

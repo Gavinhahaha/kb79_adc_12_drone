@@ -662,7 +662,7 @@ static void db_check_common_info(common_info_t *common_info)
 
             for (int i = 0; i < KEYBOARD_CFG_MAX; i++)
             {
-                const char *str = common_info->cfg_info.cfg_name[i];
+                const char *str = (const char *)common_info->cfg_info.cfg_name[i];
                 uint16_t len = strnlen(str, KEYBOARD_CFG_NAME_SIZE);
                 if ((len == 0) || (len >= KEYBOARD_CFG_NAME_SIZE))
                 {

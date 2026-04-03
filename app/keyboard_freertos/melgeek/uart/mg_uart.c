@@ -890,7 +890,6 @@ static void uart_sync_handle(void *pvParameters)
             for (uint8_t ki = 0; ki < BOARD_KEY_NUM; ki++)
             {
                 pkst = &key_st[ki];
-                kc_t *pkc = &sk_la_lm_kc_info.kc_table[gbinfo.kc.cur_kcm][ki];
                 if (pkst->cur_lvl != last_lvl[ki])
                 {
                     id = ki;

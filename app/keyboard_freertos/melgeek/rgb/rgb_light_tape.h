@@ -208,7 +208,7 @@ void light_tape_side_effect_switch_prev(void);
 void light_tape_update_sync_timer(uint8_t task_tick);
 void light_tape_play(const light_tape_state_t *p, uint8_t size);
 void light_tape_set_all(uint8_t r, uint8_t g, uint8_t b);
-const uint8_t *rgblight_get_mode_list(void);
+const rgblight_mode *rgblight_get_mode_list(void);
 void rgb_light_tape_lamp_set_all(uint8_t (*rgbi)[4]);
 void light_tape_check_para(light_tape_t *rl_array);
 void light_tape_init_ranges(void);

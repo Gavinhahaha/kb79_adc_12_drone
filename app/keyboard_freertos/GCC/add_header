@@ -1,0 +1,196 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Firmware Header Tool - PowerShell Logic Clone
+Matches the working .bat/.ps1 script exactly.
+Key Fixes:
+1. MD5 bytes are REVERSED (due to BigInteger Little-Endian conversion).
+2. Encryption range is 0 to 69 (70 bytes), INCLUDING the MD5 hash.
+"""
+import argparse
+import re
+import struct
+import hashlib
+import os
+import sys
+from datetime import datetime, timezone, timedelta
+
+def xor_key(company_name):
+    """Calculate XOR key from company name (first 3 bytes)"""
+    encoded_name = company_name.encode('utf-8', errors='ignore')
+    if len(encoded_name) < 3:
+        encoded_name = encoded_name + b'\x00' * (3 - len(encoded_name))
+    return encoded_name[0] ^ encoded_name[1] ^ encoded_name[2]
+
+def parse_version_to_bytes(version_str, length):
+    """Convert version string to bytes, padded/truncated to length"""
+    try:
+        return version_str.encode('ascii').ljust(length, b'\x00')[:length]
+    except Exception:
+        return version_str.encode('utf-8', errors='ignore').ljust(length, b'\x00')[:length]
+
+def _ver_u16_to_str(raw):
+    if raw == 0 or raw == 0xFFFF:
+        return "0.0.0"
+    return "%d.%d.%d" % (raw // 100, raw % 100 // 10, raw % 10)
+
+def extract_versions(data, offset=512):
+    """Extract FW + HW version from binary (two consecutive 2-byte LE uint16)."""
+    if len(data) < offset + 4:
+        return "0.0.0", "0.0.0"
+    fw_raw, hw_raw = struct.unpack_from('<HH', data, offset)
+    return _ver_u16_to_str(fw_raw), _ver_u16_to_str(hw_raw)
+
+def parse_board_versions(header_path):
+    """Parse BOARD_FW_VERSION and BOARD_HW_VERSION from a C header file."""
+    text = open(header_path, encoding='utf-8', errors='ignore').read()
+    fw = hw = 0
+    m = re.search(r'#define\s+BOARD_FW_VERSION\s+\((\d+)\)', text)
+    if m:
+        fw = int(m.group(1))
+    m = re.search(r'#define\s+BOARD_HW_VERSION\s+\((\d+)\)', text)
+    if m:
+        hw = int(m.group(1))
+    return _ver_u16_to_str(fw), _ver_u16_to_str(hw)
+
+def build_mg_filename(dev_name, fw_ver, hw_ver):
+    """Build timestamped .mg filename: DRIVER_<dev>_FW_<ver>_HW_<ver>_<ts>.mg"""
+    tz_cst = timezone(timedelta(hours=8))
+    ts = datetime.now(tz_cst).strftime("%Y%m%d%H%M%S")
+    return "DRIVER_%s_FW_%s_HW_%s_%s.mg" % (dev_name, fw_ver, hw_ver, ts)
+
+def main():
+    parser = argparse.ArgumentParser(description="Firmware Header Tool (PowerShell Compatible)")
+    parser.add_argument('--input', required=True, help="Input BIN file path")
+    parser.add_argument('--output', required=True,
+                        help="Output file path, or directory when --auto-name is set")
+    parser.add_argument('--auto-name', action='store_true',
+                        help="Auto-generate DRIVER_*_FW_*_HW_*_*.mg filename; "
+                             "--output is treated as the output directory")
+    parser.add_argument('--board-header', default=None,
+                        help="Path to board.h; reads BOARD_FW/HW_VERSION directly")
+    parser.add_argument('--ver-from', default=None,
+                        help="Read version from this file instead of --input (ignored if --board-header)")
+    parser.add_argument('--ver-offset', type=int, default=512,
+                        help="Byte offset of 2-byte LE FW version (default 512 = 0x200)")
+    parser.add_argument('--mg-ver', type=int, default=1, help="MG version (uint16)")
+    parser.add_argument('--dev-type', type=int, default=1, help="Device type (uint32)")
+    parser.add_argument('--dev-name', default="centauri60ultra+", help="Device name")
+    parser.add_argument('--fw-ver', default=None, help="Firmware version (auto-detected if omitted)")
+    parser.add_argument('--hw-ver', default="1.0.0", help="Hardware version")
+    parser.add_argument('--company', default="MelGeek", help="Company name")
+    parser.add_argument('--delete-encrypted', default=None,
+                        help="After success, delete this file (e.g. *_secrit.bin)")
+    parser.add_argument('--rename-plain-to-match', default=None,
+                        help="After success, rename this plain .bin to same basename as .mg output")
+
+    args = parser.parse_args()
+
+    if not os.path.exists(args.input):
+        print(f"Error: Input file not found - {args.input}")
+        sys.exit(1)
+
+    with open(args.input, 'rb') as f:
+        file_data = f.read()
+
+    if args.fw_ver is None or args.auto_name:
+        if args.board_header:
+            auto_fw, auto_hw = parse_board_versions(args.board_header)
+        else:
+            ver_src = args.ver_from or args.input
+            with open(ver_src, 'rb') as f:
+                ver_data = f.read()
+            auto_fw, auto_hw = extract_versions(ver_data, args.ver_offset)
+        if args.fw_ver is None:
+            args.fw_ver = auto_fw
+        if args.auto_name:
+            args.hw_ver = auto_hw
+
+    if args.auto_name:
+        out_dir = args.output
+        os.makedirs(out_dir, exist_ok=True)
+        fname = build_mg_filename(args.dev_name, args.fw_ver, args.hw_ver)
+        args.output = os.path.join(out_dir, fname)
+        print(f"Auto filename: {fname}")
+
+    key = xor_key(args.company)
+    print(f"Config: Company='{args.company}', Key=0x{key:02X}, DevName='{args.dev_name}', FW={args.fw_ver}")
+
+    header = bytearray(80)
+    
+    # 1. MG_VER (2 bytes, LE)
+    struct.pack_into('<H', header, 0, args.mg_ver)
+    # 2. DEV_TYPE (4 bytes, LE)
+    struct.pack_into('<I', header, 2, args.dev_type)
+    
+    # 3. DEV_NAME (32 bytes)
+    dev_name_bytes = args.dev_name.encode('ascii', errors='ignore')
+    write_len = min(len(dev_name_bytes), 32)
+    header[6:6+write_len] = dev_name_bytes[:write_len]
+    
+    # 4. FW_VER (8 bytes)
+    header[38:46] = parse_version_to_bytes(args.fw_ver, 8)
+    # 5. HW_VER (8 bytes)
+    header[46:54] = parse_version_to_bytes(args.hw_ver, 8)
+    
+    # 6. MD5 Hash (16 bytes)
+    md5_hash = hashlib.md5(file_data).digest()
+    
+    # 【关键修复 1】: 反转 MD5 字节序
+    # PowerShell 使用 BigInteger.Parse(Hex).ToByteArray()，在小端机器上会自动反转字节序
+    md5_hash_reversed = md5_hash[::-1]
+    
+    header[54:70] = md5_hash_reversed
+    
+    # 7. XOR Encryption
+    # 【关键修复 2】: 加密前 70 字节 (0 到 69)
+    # PowerShell 代码: for($i=0;$i -lt70;$i++)
+    # 这意味着 MD5 (54-69) 也要被加密！
+    encrypt_limit = 70
+    for i in range(encrypt_limit):
+        header[i] ^= key
+    
+    # Debug Output
+    print(f"Debug: Header[54:70] (Encrypted MD5): {header[54:70].hex()}")
+    print(f"Debug: Raw Reversed MD5 (Before XOR): {md5_hash_reversed.hex()}")
+    print(f"Debug: Tail [70:80]: {header[70:80].hex()}")
+
+    # 8. Write Output
+    try:
+        with open(args.output, 'wb') as out_f:
+            out_f.write(header)
+            out_f.write(file_data)
+        print(f"Success: File created - {args.output}")
+        print(f"Total Size: {80 + len(file_data)} bytes")
+    except Exception as e:
+        print(f"Error writing output file: {e}")
+        sys.exit(1)
+
+    stem = os.path.splitext(os.path.basename(args.output))[0]
+    out_dir = os.path.dirname(os.path.abspath(args.output))
+
+    if args.rename_plain_to_match:
+        src = os.path.abspath(args.rename_plain_to_match)
+        dst = os.path.join(out_dir, stem + '.bin')
+        if os.path.normcase(os.path.normpath(src)) != os.path.normcase(os.path.normpath(dst)):
+            if not os.path.isfile(src):
+                print(f"Error: plain bin not found for rename: {src}")
+                sys.exit(1)
+            if os.path.exists(dst):
+                os.remove(dst)
+            os.replace(src, dst)
+            print(f"Renamed plain bin -> {dst}")
+
+    # 先屏蔽：不删 *_secrit.bin（恢复时去掉注释整块）
+    # if args.delete_encrypted:
+    #     enc = os.path.abspath(args.delete_encrypted)
+    #     try:
+    #         if os.path.isfile(enc):
+    #             os.remove(enc)
+    #             print(f"Removed encrypted bin: {enc}")
+    #     except OSError as e:
+    #         print(f"Error: could not remove encrypted bin {enc}: {e}")
+    #         sys.exit(1)
+
+if __name__ == '__main__':
+    main()

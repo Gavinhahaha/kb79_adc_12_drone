@@ -83,7 +83,7 @@ static void hid_thread(void *pvParameters)
                     //break;
                     hal_hid_send_report(p_report);
                     //is_hid_busy = false;
-                    #warning "hid_thread hid state err need to do"
+                    /* TODO: hid_thread hid state err */
                 }
             }
         }

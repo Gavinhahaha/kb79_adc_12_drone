@@ -36,10 +36,6 @@
 #include "mg_sm.h"
 #include "mg_detection.h"
 
-#if defined(configAPPLICATION_ALLOCATED_HEAP) && (configAPPLICATION_ALLOCATED_HEAP == 1)
-__attribute__((section(".ahb_sram"), aligned(8)))
-uint8_t ucHeap[configTOTAL_HEAP_SIZE];
-#endif
 
 #if DEBUG_EN == 1
     #define   MODULE_LOG_ENABLED            (1)
@@ -65,15 +61,10 @@ int main(void)
     hal_spi_init();
     mg_uart_init();
     hive_init();
-    
     mg_sm_init();
-    
     layout_fn_init();
-    
-    
     matrix_init();
     mg_indev_init();
-    
     mg_detectiopn_init();
     mg_hid_init();
     hal_wdg_init();

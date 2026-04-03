@@ -77,6 +77,8 @@ initialize by copy                          { block vectors, block vectors_s };
 /* Placement */
 place in NOR_CFG_OPTION                     { section .nor_cfg_option };
 place in BOOT_HEADER with fixed order       { block boot_header };
+/* MG 打包读 bin@0x200：board.c 中 .mg_pack_ver（BOARD_FW/HW_VERSION） */
+place at address 0x80003200                 { section .mg_pack_ver };
 place at start of XPI0 with fixed order     { symbol _start };
 place at start of ILM with fixed order      { block vectors, block vectors_s };
 place in XPI0 with minimum size order       {
@@ -118,3 +120,4 @@ place at end of DLM                       { block stack };                      
 /* Keep */
 keep { section .nor_cfg_option, section .boot_header, section .fw_info_table, section .dc_info };
 keep { section .usbh_class_info, section FSymTab, section VSymTab, section .rti_fn*, section RTMSymTab };
+keep { section .mg_pack_ver };

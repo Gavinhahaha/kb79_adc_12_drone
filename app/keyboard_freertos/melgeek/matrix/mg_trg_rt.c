@@ -437,8 +437,7 @@ bool rt_handle(uint8_t ki, uint16_t tmpData)
                 {
                     pkst->last_rls_point = tmpData;
                     key_rt_record_limit_up_point(ki, sw_type, tmpData);
-                    // DBG_PRINTF("    [%02d]U(cur:%04d) chg:%02d lvl:%02d(%02d) ht:%d,%d\n", ki, \
-                    //       tmpData, change, tmpLevel, kh.p_st[ki].rtLimitPointLevel, ht, us);
+                    /* DBG_PRINTF multi-line kept as block to avoid //-continuation [-Wcomment] */
 
                     ret = false;
                 }
@@ -485,7 +484,7 @@ bool rt_handle(uint8_t ki, uint16_t tmpData)
     {
         //DBG_PRINTF("[%d]rt_err %d\n", ki, kh.p_st[ki].trg_phy);
         pkst->trg_phy = KEY_STATUS_U2U;
-        #warning "need check key state err 2"
+        /* TODO: need check key state err 2 */
     }
     return ret;
 }

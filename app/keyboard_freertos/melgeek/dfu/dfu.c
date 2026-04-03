@@ -503,7 +503,6 @@ uint32_t on_sys_dfu_req(uint16_t len, uint16_t reserve, uint8_t *pdata)
     
     uint8_t buf[3] = {0};
     uint32_t firmwarm_size = pdata[4] | (pdata[5] << 8) | (pdata[6] << 16) | (pdata[7] << 24);
-    uint16_t pid = pdata[0] | (pdata[1] << 8);
     dfu_obj = *(uint32_t *)pdata;
     b_dfu_start = 0;
 

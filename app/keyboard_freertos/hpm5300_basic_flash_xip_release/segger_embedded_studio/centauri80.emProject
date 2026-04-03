@@ -39,7 +39,7 @@
       arm_rtl_variant="SEGGER"
       build_generic_options_file_name=""
       build_output_file_name="$(OutDir)/demo$(EXE)"
-      c_additional_options="-Wall;-Wundef;-Wno-format;-fomit-frame-pointer;-fno-builtin;-ffunction-sections;-fdata-sections"
+      c_additional_options="-Wall;-Wundef;-Wno-format;-fomit-frame-pointer;-fno-builtin;-ffunction-sections;-fdata-sections;-Wno-unused-parameter"
       c_user_include_directories="../../hpm_sdk_localized_for_hpm5300_basic/arch;../../hpm_sdk_localized_for_hpm5300_basic/arch/riscv/l1c;../../../../board/hpm5300_basic;../../hpm_sdk_localized_for_hpm5300_basic/soc/HPM5300/HPM5361;../../hpm_sdk_localized_for_hpm5300_basic/soc/HPM5300/ip;../../hpm_sdk_localized_for_hpm5300_basic/soc/HPM5300/HPM5361/toolchains;../../hpm_sdk_localized_for_hpm5300_basic/soc/HPM5300/HPM5361/boot;../../hpm_sdk_localized_for_hpm5300_basic/drivers/inc;../../hpm_sdk_localized_for_hpm5300_basic/utils;../../hpm_sdk_localized_for_hpm5300_basic/components/debug_console;../../hpm_sdk_localized_for_hpm5300_basic/components/usb/device;../../hpm_sdk_localized_for_hpm5300_basic/components/spi;../../hpm_sdk_localized_for_hpm5300_basic/components/dma_mgr;../../hpm_sdk_localized_for_hpm5300_basic/middleware/FreeRTOS/Source/include;../../hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb/common;../../hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb/osal;../../hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb/core;../../hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb/class/cdc;../../hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb/class/hid;../../hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb/class/midi;../../hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb/class/msc;../../hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb/class/audio;../../hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb/class/video;../../hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb/class/hub;../../hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb/class/wireless;../../hpm_sdk_localized_for_hpm5300_basic/middleware/cherryusb/port/ehci;../build_tmp/generated/include;../../../../../config;../../hpm_sdk_localized_for_hpm5300_basic/middleware/FreeRTOS/Source/portable/GCC/RISC-V;../../hpm_sdk_localized_for_hpm5300_basic/middleware/FreeRTOS/Source/portable/GCC/RISC-V/chip_specific_extensions/HPMicro;../../hpm_sdk_localized_for_hpm5300_basic/middleware/FreeRTOS/Source/portable/GCC/RISC-V"
       debug_target_connection="GDB Server"
       gcc_all_warnings_command_line_options="-Wall;-Wextra;-Wno-format"
@@ -422,7 +422,9 @@
             default_zeroed_section=".fast" />
         </file>
         <file file_name="../../melgeek/matrix/mg_matrix_config.c" />
-        <file file_name="../../melgeek/matrix/mg_matrix_ctrl.c" />
+        <file file_name="../../melgeek/matrix/mg_matrix_ctrl.c">
+          <configuration Name="Debug" default_code_section=".text" />
+        </file>
         <file file_name="../../melgeek/sm/mg_sm.c">
           <configuration Name="Debug" default_zeroed_section=".fast" />
         </file>
@@ -452,9 +454,13 @@
           <file file_name="../../melgeek/rgb/led_effect/effect_ripple.c" />
           <file file_name="../../melgeek/rgb/led_effect/effect_wave.c" />
         </folder>
-        <file file_name="../../melgeek/rgb/rgb_lamp_array.c" />
         <file file_name="../../melgeek/rgb/rgb_lamp_sync.c" />
-        <file file_name="../../melgeek/rgb/rgb_led_action.c" />
+        <file file_name="../../melgeek/rgb/rgb_lamp_array.c">
+          <configuration Name="Debug" default_code_section=".text" />
+        </file>
+        <file file_name="../../melgeek/rgb/rgb_led_action.c">
+          <configuration Name="Debug" default_code_section=".text" />
+        </file>
         <file file_name="../../melgeek/rgb/rgb_led_color.c" />
         <file file_name="../../melgeek/rgb/rgb_led_ctrl.c">
           <configuration Name="Debug" default_code_section=".text" />

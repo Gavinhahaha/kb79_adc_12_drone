@@ -1,293 +1,324 @@
 # ==============================================================================
-# CENTAURI60 固件 Makefile（官方工程对齐版 · 100% 可编译）
-# 基于 SEGGER Embedded Studio 工程自动生成
-# 适配：Windows + RISC-V GCC
+# CENTAURI80：命令行调用 SEGGER emBuild 编 IDE 工程，再把 demo.bin 落到 GCC/bin
+#   make        增量编译 + copy bin
+#   make all    全量重编 + copy bin（emBuild -rebuild）
+#   make clean  删除 IDE Output、GCC/bin、GCC/Objects
 # ==============================================================================
 
-.DEFAULT_GOAL := all
+.DEFAULT_GOAL := build
 
-UNAME_S := Windows_NT
-TIMESTAMP := $(shell powershell -NoProfile -Command "(Get-Date).ToString('yyyyMMddHHmmss')")
-SHELL := cmd
-DIR_SEP := /
-
-VERSION_TAG := drone_ci
-BUILD       ?= release
-$(info [SYSTEM] Windows | 版本: $(VERSION_TAG) | BUILD=$(BUILD))
-
-# ========================== 路径定义 ==========================
-TARGET       := DRIVER_CENTAURI60
-BIN_DIR      := app/keyboard_freertos/GCC/bin
-OBJ_BASE     := app/keyboard_freertos/GCC/Objects
-
-OUTPUT_ELF   := $(BIN_DIR)/$(TARGET).elf
-OUTPUT_BIN   := $(BIN_DIR)/$(TARGET).bin
-OUTPUT_HEX   := $(BIN_DIR)/$(TARGET).hex
-OUTPUT_MAP   := $(BIN_DIR)/$(TARGET).map
-
-BSP_DIR      := board/hpm5300_basic
-USER_DIR     := app
-HAL_DIR      := app/keyboard_freertos/hpm_sdk_localized_for_hpm5300_basic
-XIP_DIR      := app/keyboard_freertos/hpm5300_basic_flash_xip_release
-MELGEEK_DIR  := app/keyboard_freertos/melgeek
-SRC_DIR      := app/keyboard_freertos/src
-CONFIG_DIR   := app/config
-
-# ========================== 工具链 ==========================
-TOOLCHAIN_BIN := "app/keyboard_freertos/toolchains/rv32imac_zicsr_zifencei_multilib_b_ext-win/bin"
-CC            := $(TOOLCHAIN_BIN)/riscv32-unknown-elf-gcc-13.2.0.exe
-AS            := $(TOOLCHAIN_BIN)/riscv32-unknown-elf-as.exe
-OBJCOPY       := $(TOOLCHAIN_BIN)/riscv32-unknown-elf-objcopy.exe
-OBJDUMP       := $(TOOLCHAIN_BIN)/riscv32-unknown-elf-objdump.exe
-SIZE          := $(TOOLCHAIN_BIN)/riscv32-unknown-elf-size.exe
-
-# ========================== 官方工程对齐：架构 ==========================
-# 对齐 SES Release: rv32imac + zba/zbb/zbc/zbs + zicsr/zifencei
-RISCV_ARCH     := rv32imac_zba_zbb_zbc_zbs_zicsr_zifencei
-RISCV_ABI      := ilp32
-ARCH_FLAGS     := -march=$(RISCV_ARCH) -mabi=$(RISCV_ABI) -mcmodel=medany \
-                  -ffunction-sections -fdata-sections -fno-common
-
-# ========================== 官方宏定义 ==========================
-DEFS := \
--DFLASH_XIP=1 \
--DHPMSOC_HAS_HPMSDK_GPIO=y \
--DHPMSOC_HAS_HPMSDK_PLIC=y \
--DHPMSOC_HAS_HPMSDK_MCHTMR=y \
--DHPMSOC_HAS_HPMSDK_PLICSW=y \
--DHPMSOC_HAS_HPMSDK_GPTMR=y \
--DHPMSOC_HAS_HPMSDK_UART=y \
--DHPMSOC_HAS_HPMSDK_I2C=y \
--DHPMSOC_HAS_HPMSDK_SPI=y \
--DHPMSOC_HAS_HPMSDK_CRC=y \
--DHPMSOC_HAS_HPMSDK_TSNS=y \
--DHPMSOC_HAS_HPMSDK_MBX=y \
--DHPMSOC_HAS_HPMSDK_EWDG=y \
--DHPMSOC_HAS_HPMSDK_DMAMUX=y \
--DHPMSOC_HAS_HPMSDK_DMAV2=y \
--DHPMSOC_HAS_HPMSDK_GPIOM=y \
--DHPMSOC_HAS_HPMSDK_MCAN=y \
--DHPMSOC_HAS_HPMSDK_PTPC=y \
--DHPMSOC_HAS_HPMSDK_QEIV2=y \
--DHPMSOC_HAS_HPMSDK_QEO=y \
--DHPMSOC_HAS_HPMSDK_MMC=y \
--DHPMSOC_HAS_HPMSDK_PWM=y \
--DHPMSOC_HAS_HPMSDK_RDC=y \
--DHPMSOC_HAS_HPMSDK_PLB=y \
--DHPMSOC_HAS_HPMSDK_SYNT=y \
--DHPMSOC_HAS_HPMSDK_SEI=y \
--DHPMSOC_HAS_HPMSDK_TRGM=y \
--DHPMSOC_HAS_HPMSDK_USB=y \
--DHPMSOC_HAS_HPMSDK_SDP=y \
--DHPMSOC_HAS_HPMSDK_SEC=y \
--DHPMSOC_HAS_HPMSDK_MON=y \
--DHPMSOC_HAS_HPMSDK_RNG=y \
--DHPMSOC_HAS_HPMSDK_OTP=y \
--DHPMSOC_HAS_HPMSDK_KEYM=y \
--DHPMSOC_HAS_HPMSDK_ADC16=y \
--DHPMSOC_HAS_HPMSDK_DAC=y \
--DHPMSOC_HAS_HPMSDK_OPAMP=y \
--DHPMSOC_HAS_HPMSDK_ACMP=y \
--DHPMSOC_HAS_HPMSDK_SYSCTL=y \
--DHPMSOC_HAS_HPMSDK_IOC=y \
--DHPMSOC_HAS_HPMSDK_PLLCTLV2=y \
--DHPMSOC_HAS_HPMSDK_PPOR=y \
--DHPMSOC_HAS_HPMSDK_PCFG=y \
--DHPMSOC_HAS_HPMSDK_PGPR=y \
--DHPMSOC_HAS_HPMSDK_PDGO=y \
--DHPMSOC_HAS_HPMSDK_PMP=y \
--DUSE_DMA_MGR=1 \
--DCONFIG_DISABLE_GLOBAL_IRQ_ON_STARTUP=1 \
--DCONFIG_FREERTOS=1 \
--DportasmHAS_MTIME=1 \
--D__freertos_irq_stack_top=_stack \
--DUSE_NONVECTOR_MODE=1 \
--DDISABLE_IRQ_PREEMPTIVE=1 \
--DTEST_VERSION="\"$(VERSION_TAG)\""
-
-# ========================== 官方头文件路径 ==========================
-INCDIR       := \
--I$(HAL_DIR)/arch \
--I$(HAL_DIR)/arch/riscv/l1c \
--I$(BSP_DIR) \
--I$(HAL_DIR)/soc/HPM5300/HPM5361 \
--I$(HAL_DIR)/soc/HPM5300/ip \
--I$(HAL_DIR)/soc/HPM5300/HPM5361/toolchains \
--I$(HAL_DIR)/soc/HPM5300/HPM5361/boot \
--I$(HAL_DIR)/drivers/inc \
--I$(HAL_DIR)/utils \
--I$(HAL_DIR)/components/debug_console \
--I$(HAL_DIR)/components/usb/device \
--I$(HAL_DIR)/components/spi \
--I$(HAL_DIR)/components/dma_mgr \
--I$(HAL_DIR)/middleware/FreeRTOS/Source/include \
--I$(HAL_DIR)/middleware/cherryusb/common \
--I$(HAL_DIR)/middleware/cherryusb/osal \
--I$(HAL_DIR)/middleware/cherryusb/core \
--I$(HAL_DIR)/middleware/cherryusb/class/hid \
--I$(HAL_DIR)/middleware/cherryusb/class/hub \
--I$(HAL_DIR)/middleware/FreeRTOS/Source/portable/GCC/RISC-V \
--I$(HAL_DIR)/middleware/FreeRTOS/Source/portable/GCC/RISC-V/chip_specific_extensions/HPMicro \
--I$(XIP_DIR)/build_tmp/generated/include \
--I$(CONFIG_DIR) \
--I$(MELGEEK_DIR)/hal \
--I$(MELGEEK_DIR)/matrix \
--I$(MELGEEK_DIR)/dfu \
--I$(MELGEEK_DIR)/easy_fifo \
--I$(MELGEEK_DIR)/hive \
--I$(MELGEEK_DIR)/db \
--I$(MELGEEK_DIR)/interface \
--I$(MELGEEK_DIR)/ver \
--I$(MELGEEK_DIR)/drivers \
--I$(MELGEEK_DIR)/rgb \
--I$(MELGEEK_DIR)/rgb/led_effect \
--I$(MELGEEK_DIR)/power_save \
--I$(MELGEEK_DIR)/sk \
--I$(MELGEEK_DIR)/layout \
--I$(MELGEEK_DIR)/uart \
--I$(MELGEEK_DIR)/segger_rtt \
--I$(MELGEEK_DIR)/input_devices \
--I$(MELGEEK_DIR)/sm \
--I$(MELGEEK_DIR)/detection \
--I$(MELGEEK_DIR)/factory \
--I$(MELGEEK_DIR)/log \
--I$(SRC_DIR)
-
-# ========================== 编译参数（对齐 centauri80.emProject） ==========================
-ifeq ($(BUILD),debug)
-  DEFS += -DDEBUG
-  CFLAGS_OPT := -g3 -O2
+ifeq ($(OS),Windows_NT)
+  HOST_WINDOWS := 1
+endif
+ifeq ($(HOST_WINDOWS),1)
+  SHELL := cmd
 else
-  DEFS += -DNDEBUG
-  CFLAGS_OPT := -O2
+  SHELL := /bin/sh
 endif
 
-CFLAGS := $(ARCH_FLAGS) $(DEFS) $(CFLAGS_OPT) -std=gnu99 \
--Wall -Wextra -Wno-format -Wundef \
--mcmodel=medany \
--fno-builtin \
--fomit-frame-pointer \
--ffunction-sections -fdata-sections \
--fno-asynchronous-unwind-tables -fno-unwind-tables -fno-strict-aliasing \
-$(INCDIR)
+VERSION_TAG := drone_ci
+BUILD       ?= debug
 
-ASFLAGS        := $(ARCH_FLAGS) -x assembler-with-cpp -D__ASSEMBLY__ $(DEFS) $(INCDIR)
+$(info [SYSTEM] $(if $(HOST_WINDOWS),Windows,Unix-like) | BUILD=$(BUILD) — make=增量编译+copy bin, make all=重编+copy bin)
 
-# ========================== 链接脚本 ==========================
-LDSCRIPT       := $(HAL_DIR)/soc/HPM5300/HPM5361/toolchains/gcc/flash_xip.ld
-LFLAGS         := -T$(LDSCRIPT) -Wl,-Map=$(OUTPUT_MAP) -Wl,--gc-sections --specs=nano.specs -lm -lc -lgcc
-LFLAGS         += -nostartfiles
-LFLAGS         += -Wl,--defsym=_stack_size=0x1000
-LFLAGS         += -Wl,--defsym=_heap_size=0x0000
-LFLAGS         += -Wl,--defsym=_flash_size=0x100000
+# ========================== 路径 ==========================
+TARGET            := DRIVER_CENTAURI80
+BIN_DIR           := app/keyboard_freertos/GCC/bin
+GCC_OBJECTS_DIR   := app/keyboard_freertos/GCC/Objects
+BIN_DIR_WIN       := $(subst /,\,$(BIN_DIR))
+GCC_OBJECTS_WIN   := $(subst /,\,$(GCC_OBJECTS_DIR))
+OUTPUT_BIN        := $(BIN_DIR)/$(TARGET).bin
+OUTPUT_BIN_WIN    := $(subst /,\,$(OUTPUT_BIN))
+OUTPUT_SECRIT     := $(BIN_DIR)/$(TARGET)_secrit.bin
 
-# ========================== 源文件 ==========================
-ASM_SRCS  := \
-$(HAL_DIR)/soc/HPM5300/HPM5361/toolchains/gcc/start.S \
-$(HAL_DIR)/middleware/FreeRTOS/Source/portable/GCC/RISC-V/portASM.S
+# ========================== 加密 / 打包参数 ==========================
+ENCRYPT_SCRIPT    := app/keyboard_freertos/GCC/encrypt_bin.py
+ADD_HEADER_SCRIPT := app/keyboard_freertos/GCC/add_header
+# hpm_img_util.exe: 官方 EXIP 加密工具（Windows 直接运行，Linux 通过 wine 运行）
+HPM_IMG_UTIL      := app/keyboard_freertos/GCC/hpm_img_util.exe
+MG_DEV_NAME       := CENTAURI80
+MG_DEV_TYPE       := 0
 
-C_SRCS  := $(wildcard $(HAL_DIR)/drivers/src/*.c)
-C_SRCS  += $(wildcard $(HAL_DIR)/soc/HPM5300/HPM5361/*.c)
-C_SRCS  += $(wildcard $(HAL_DIR)/soc/HPM5300/HPM5361/boot/*.c)
-C_SRCS  += $(wildcard $(HAL_DIR)/soc/HPM5300/HPM5361/toolchains/*.c)
-C_SRCS  += $(wildcard $(HAL_DIR)/arch/riscv/l1c/*.c)
-C_SRCS  += $(wildcard $(HAL_DIR)/components/debug_console/*.c)
-C_SRCS  += $(wildcard $(HAL_DIR)/components/dma_mgr/*.c)
-C_SRCS  += $(wildcard $(HAL_DIR)/components/spi/*.c)
-C_SRCS  += $(wildcard $(HAL_DIR)/components/usb/device/*.c)
-C_SRCS  += $(wildcard $(HAL_DIR)/utils/*.c)
-C_SRCS  += $(wildcard $(HAL_DIR)/middleware/FreeRTOS/Source/*.c)
-C_SRCS  += $(wildcard $(HAL_DIR)/middleware/FreeRTOS/Source/portable/GCC/RISC-V/*.c)
-C_SRCS  += $(wildcard $(HAL_DIR)/middleware/FreeRTOS/Source/portable/GCC/RISC-V/chip_specific_extensions/HPMicro/*.c)
-C_SRCS  += $(HAL_DIR)/middleware/FreeRTOS/Source/portable/MemMang/heap_4.c
-# CherryUSB：仅 device HID（与 centauri80.emProject 一致，勿编入 usbh/usbotg）
-C_SRCS  += $(HAL_DIR)/middleware/cherryusb/core/usbd_core.c
-C_SRCS  += $(HAL_DIR)/middleware/cherryusb/class/hid/usbd_hid.c
-C_SRCS  += $(HAL_DIR)/middleware/cherryusb/osal/usb_osal_freertos.c
-C_SRCS  += $(HAL_DIR)/middleware/cherryusb/port/hpm/usb_dc_hpm.c
-C_SRCS  += $(wildcard $(BSP_DIR)/*.c)
-C_SRCS  += $(wildcard $(SRC_DIR)/*.c)
+ENCRYPT_KEK       := 1ca7333ade25f2ca7b468fae642445a3
+# 与镜像助手一致：HDR=容器相对镜像起点；FW=固件相对容器的配置值（flat 镜像里即应用区从 0 起的偏移，非 0xC00+0x2000）
+ENCRYPT_FW_OFFSET := 0x2000
+ENCRYPT_HDR_OFFSET:= 0x0c00
+ENCRYPT_LOAD_ADDR := 0x80003000
+ENCRYPT_ENTRY     := 0x80003000
+ENCRYPT_MEM_BASE  := 0x80000000
+ENCRYPT_EXIP_START:= 0x80003000
+ENCRYPT_EXIP_LEN  := 0x10000
+FLASH_CFG_OPT0    := 0xfcf90002
+FLASH_CFG_OPT1    := 0x00000006
+FLASH_CFG_OPT2    := 0x00001000
+FLASH_CFG_OPT3    := 0x00000000
 
-C_SRCS  += $(wildcard $(MELGEEK_DIR)/hal/*.c)
-C_SRCS  += $(wildcard $(MELGEEK_DIR)/matrix/*.c)
-C_SRCS  += $(wildcard $(MELGEEK_DIR)/dfu/*.c)
-C_SRCS  += $(wildcard $(MELGEEK_DIR)/easy_fifo/*.c)
-C_SRCS  += $(wildcard $(MELGEEK_DIR)/hive/*.c)
-C_SRCS  += $(wildcard $(MELGEEK_DIR)/db/*.c)
-C_SRCS  += $(wildcard $(MELGEEK_DIR)/interface/*.c)
-C_SRCS  += $(wildcard $(MELGEEK_DIR)/ver/*.c)
-C_SRCS  += $(wildcard $(MELGEEK_DIR)/drivers/*.c)
-C_SRCS  += $(wildcard $(MELGEEK_DIR)/rgb/*.c)
-C_SRCS  += $(wildcard $(MELGEEK_DIR)/rgb/led_effect/*.c)
-C_SRCS  += $(wildcard $(MELGEEK_DIR)/power_save/*.c)
-C_SRCS  += $(wildcard $(MELGEEK_DIR)/sk/*.c)
-C_SRCS  += $(wildcard $(MELGEEK_DIR)/layout/*.c)
-C_SRCS  += $(wildcard $(MELGEEK_DIR)/uart/*.c)
-C_SRCS  += $(wildcard $(MELGEEK_DIR)/segger_rtt/*.c)
-C_SRCS  += $(wildcard $(MELGEEK_DIR)/input_devices/*.c)
-C_SRCS  += $(wildcard $(MELGEEK_DIR)/sm/*.c)
-C_SRCS  += $(wildcard $(MELGEEK_DIR)/detection/*.c)
-C_SRCS  += $(wildcard $(MELGEEK_DIR)/factory/*.c)
-C_SRCS  += $(wildcard $(MELGEEK_DIR)/log/*.c)
+# demo.bin 首字节 LMA = NOR_CFG 0x80000400；.mg_pack_ver 固定 VA 0x80003200 ⇒ 文件偏移 0x2E00
+MG_VER_FILE_OFFSET := 11776
 
-# 与 SES 工程一致：排除未加入工程的源文件
-C_SRCS := $(filter-out %/drv_button.c,$(C_SRCS))
-C_SRCS := $(filter-out %/drv_encoder.c,$(C_SRCS))
-C_SRCS := $(filter-out %/mg_hall.c,$(C_SRCS))
-C_SRCS := $(filter-out %/usb_descriptor.c,$(C_SRCS))
-C_SRCS := $(filter-out %/interface_usb.c,$(C_SRCS))
+# EXIP 区 AES key/nonce：
+#   默认（下三行都空）→ 脚本用 os.urandom，每次构建前 0x100 都不同。
+#   镜像助手对同一固件多次生成若前 0x100 相同 → 工具侧为界面固定 Key/Nonce（非每次随机），
+#   与默认脚本行为不一致；要与助手逐字节对齐请设置 ENCRYPT_FIXED_EXIP_MATERIAL=界面上的 key||nonce。
+# 可选：--rng-seed 仅用于脚本自测/回归（与助手无关，除非你刻意对齐同一 seed 流）。
+# 例：make build ENCRYPT_RNG_SEED=ci-repro-1
+ENCRYPT_RNG_SEED ?=
+ifeq ($(strip $(ENCRYPT_RNG_SEED)),)
+  ENCRYPT_RNG_ARG :=
+else
+  ENCRYPT_RNG_ARG := --rng-seed "$(ENCRYPT_RNG_SEED)"
+endif
 
-# ========================== 目标文件 ==========================
-C_OBJECTS      := $(addprefix $(OBJ_BASE)/,$(notdir $(C_SRCS:.c=.o)))
-ASM_OBJECTS    := $(addprefix $(OBJ_BASE)/,$(notdir $(ASM_SRCS:.S=.o)))
-DEP_FILES      := $(C_OBJECTS:.o=.d)
+# ---------- 与 HPM 图形工具逐字节对比（仅测试向量，勿用于量产）----------
+# 工具里与下面 makefile 变量保持一致：
+#   KEK  ← ENCRYPT_KEK（32 hex，界面可写成 1ca7333a,de25f2ca,7b468fae,642445a3）
+#   Flash 基地址 / 加密区域起始与长度 ← ENCRYPT_EXIP_*、FLASH_CFG_OPT* 等同工具选项
+#   区域 AES Key（32 hex）+ Nonce（16 hex = 8 字节，与脚本 CTR 一致）手工填写，勿点「随机」
+# 约定示例（脚本为 48 hex 连续无空格：key||nonce）：
+#   AES   = 00112233445566778899aabbccddeeff
+#   Nonce = 0102030405060708
+# 构建： make build ENCRYPT_FIXED_EXIP_MATERIAL=00112233445566778899aabbccddeeff0102030405060708
+# 若设置本变量，会传 --fixed-exip-material，且优先于 ENCRYPT_RNG_SEED（二者勿同时依赖）。
+ENCRYPT_FIXED_EXIP_MATERIAL ?=
+ifeq ($(strip $(ENCRYPT_FIXED_EXIP_MATERIAL)),)
+  ENCRYPT_EXIP_RAND_ARG := $(ENCRYPT_RNG_ARG)
+else
+  ifneq ($(strip $(ENCRYPT_RNG_SEED)),)
+    $(warning ENCRYPT_RNG_SEED ignored: ENCRYPT_FIXED_EXIP_MATERIAL is set)
+  endif
+  ENCRYPT_EXIP_RAND_ARG := --fixed-exip-material "$(ENCRYPT_FIXED_EXIP_MATERIAL)"
+endif
 
-VPATH  = $(sort $(dir $(C_SRCS)))
-VPATH += $(sort $(dir $(ASM_SRCS)))
+# 可选：与 Windows 工具对不齐密文时试 nonce_low（传给 encrypt_bin.py --ctr-iv-layout）
+ENCRYPT_CTR_IV_LAYOUT ?=
+ifeq ($(strip $(ENCRYPT_CTR_IV_LAYOUT)),)
+  ENCRYPT_CTR_ARG :=
+else
+  ENCRYPT_CTR_ARG := --ctr-iv-layout $(ENCRYPT_CTR_IV_LAYOUT)
+endif
 
-# ========================== 构建规则 ==========================
-.PHONY: all clean check_toolchain
+# 与镜像助手「Firmware Info → Size」对齐（当前示例 0x32170；换 demo 后在助手里读 Size 再改）。
+# 使用整段 extract：make ENCRYPT_FW_LENGTH=  （并建议 ENCRYPT_APPEND_HPM_TAIL=0）
+ENCRYPT_FW_LENGTH ?= 0x32170
+# 1：截断后再从 demo.bin 紧跟 fw 尾追加 hdr_offset(0xC00) 字节，总长度贴近 HPM 工具
+ENCRYPT_APPEND_HPM_TAIL ?= 1
+ifeq ($(strip $(ENCRYPT_FW_LENGTH)),)
+  ENCRYPT_FW_LEN_ARG :=
+  ENCRYPT_APPEND_ARG :=
+else
+  ENCRYPT_FW_LEN_ARG := --fw-length "$(ENCRYPT_FW_LENGTH)"
+  ifeq ($(strip $(ENCRYPT_APPEND_HPM_TAIL)),1)
+    ENCRYPT_APPEND_ARG := --append-hpm-image-tail
+  else
+    ENCRYPT_APPEND_ARG :=
+  endif
+endif
 
-check_toolchain:
-	@echo 🔧 工具链: $(CC)
+XIP_DIR           := app/keyboard_freertos/hpm5300_basic_flash_xip_release
+SES_STUDIO_DIR    := $(XIP_DIR)/segger_embedded_studio
+SES_PROJECT_FN    := centauri80.emProject
+ifeq ($(BUILD),debug)
+  SES_CONFIG := Debug
+else
+  SES_CONFIG := Release
+endif
+SES_EXE_DIR       := $(SES_STUDIO_DIR)/Output/$(SES_CONFIG)/Exe
+SES_DEMO_BIN      := $(SES_EXE_DIR)/demo.bin
+SES_DEMO_ELF      := $(SES_EXE_DIR)/demo.elf
+SES_SOLUTION_NAME := cherryusb_device_hid_keyboard_freertos
+SES_STUDIODIR     ?=
 
-all: check_toolchain $(OUTPUT_ELF) $(OUTPUT_BIN) $(OUTPUT_HEX)
+SES_OUTPUT_DIR    := $(SES_STUDIO_DIR)/Output
+SES_OUTPUT_WIN    := $(subst /,\,$(SES_OUTPUT_DIR))
+SES_DEMO_BIN_WIN  := $(subst /,\,$(SES_DEMO_BIN))
+SES_DEMO_ELF_WIN  := $(subst /,\,$(SES_DEMO_ELF))
+
+# ========================== emBuild ==========================
+EMBUILD         ?=
+ifeq ($(strip $(EMBUILD)),)
+ifneq ($(strip $(SEGGER_EMBUILD)),)
+EMBUILD         := $(strip $(SEGGER_EMBUILD))
+endif
+endif
+ifeq ($(HOST_WINDOWS),1)
+ifeq ($(strip $(EMBUILD)),)
+EMBUILD         := $(strip $(shell powershell -NoProfile -Command "$$roots=@('C:\\Program Files\\SEGGER','C:\\Program Files (x86)\\SEGGER'); foreach($$r in $$roots){ if(Test-Path -LiteralPath $$r){ Get-ChildItem -LiteralPath $$r -Directory -ErrorAction SilentlyContinue | ForEach-Object { $$e=Join-Path $$_.FullName 'bin/emBuild.exe'; if(Test-Path -LiteralPath $$e){ Write-Output $$e; exit 0 } } } }"))
+endif
+else
+ifeq ($(strip $(EMBUILD)),)
+EMBUILD         := $(strip $(shell command -v emBuild 2>/dev/null))
+endif
+ifeq ($(strip $(EMBUILD)),)
+EMBUILD         := $(strip $(firstword $(sort $(wildcard /opt/SEGGER/*/bin/emBuild) $(wildcard /opt/segger/*/bin/emBuild) $(wildcard $(HOME)/SEGGER/*/bin/emBuild) $(wildcard $(HOME)/segger/*/bin/emBuild))))
+endif
+endif
+
+ifneq ($(strip $(EMBUILD)),)
+ifeq ($(strip $(SES_STUDIODIR)),)
+ifeq ($(HOST_WINDOWS),1)
+SES_STUDIODIR := $(strip $(shell powershell -NoProfile -Command "Split-Path (Split-Path -LiteralPath '$(EMBUILD)')"))
+else
+SES_STUDIODIR := $(strip $(shell dirname "$(shell dirname "$(EMBUILD)")"))
+endif
+endif
+endif
+
+SES_EMBUILD_FLAGS :=
+ifneq ($(strip $(SES_STUDIODIR)),)
+  SES_EMBUILD_FLAGS += -studiodir "$(SES_STUDIODIR)"
+endif
+SES_EMBUILD_FLAGS += -config "$(SES_CONFIG)" -solution "$(SES_SOLUTION_NAME)"
+
+ifeq ($(HOST_WINDOWS),1)
+TOOLCHAIN_BIN := app/keyboard_freertos/toolchains/rv32imac_zicsr_zifencei_multilib_b_ext-win/bin
+OBJCOPY       := $(TOOLCHAIN_BIN)/riscv32-unknown-elf-objcopy.exe
+else
+ifeq ($(origin OBJCOPY),undefined)
+OBJCOPY       := $(strip $(shell sh -c 'for t in riscv32-unknown-elf-objcopy riscv32-none-elf-objcopy; do p=$$(command -v "$$t" 2>/dev/null); [ -n "$$p" ] && echo "$$p" && exit 0; done; echo riscv32-unknown-elf-objcopy'))
+endif
+endif
+
+# ========================== 规则 ==========================
+.PHONY: build all clean
+
+ifeq ($(HOST_WINDOWS),1)
+
+# --- make（增量编译 + copy） ---
+build:
+ifeq ($(strip $(EMBUILD)),)
+	@echo [ERROR] 未找到 emBuild。请安装 SEGGER Embedded Studio，或：
+	@echo   make EMBUILD^="C:\Program Files\SEGGER\SEGGER Embedded Studio 8.xx\bin\emBuild.exe"
+	@exit /b 1
+endif
+	@echo [SES] 增量编译 $(SES_CONFIG)...
+	cd /d "$(SES_STUDIO_DIR)" && "$(EMBUILD)" $(SES_EMBUILD_FLAGS) "$(SES_PROJECT_FN)" || exit /b 1
+	@if not exist "$(SES_DEMO_BIN_WIN)" if not exist "$(SES_DEMO_ELF_WIN)" (echo [ERROR] emBuild 未生成 demo.bin / demo.elf。 & exit /b 1)
+	@if not exist "$(BIN_DIR)" mkdir "$(BIN_DIR)"
+	@if exist "$(SES_DEMO_BIN_WIN)" (copy /Y "$(SES_DEMO_BIN_WIN)" "$(OUTPUT_BIN_WIN)" && echo [SES] copied $(SES_DEMO_BIN) -^> $(OUTPUT_BIN)) else if exist "$(SES_DEMO_ELF_WIN)" ("$(OBJCOPY)" -O binary -R .eh_frame -R .eh_frame_hdr "$(SES_DEMO_ELF_WIN)" "$(OUTPUT_BIN_WIN)" && echo [SES] objcopy $(SES_DEMO_ELF) -^> $(OUTPUT_BIN)) else (echo [ERROR] 未找到 demo.bin/demo.elf && exit /b 1)
+	@echo [ENCRYPT] 生成加密镜像（调用 hpm_img_util）...
+	python "$(ENCRYPT_SCRIPT)" --input "$(OUTPUT_BIN)" --output "$(OUTPUT_SECRIT)" --kek "$(ENCRYPT_KEK)" --fw-offset "$(ENCRYPT_FW_OFFSET)" --hdr-offset "$(ENCRYPT_HDR_OFFSET)" --load-addr "$(ENCRYPT_LOAD_ADDR)" --entry "$(ENCRYPT_ENTRY)" --mem-base "$(ENCRYPT_MEM_BASE)" --exip-start "$(ENCRYPT_EXIP_START)" --exip-len "$(ENCRYPT_EXIP_LEN)" --ver-patch-offset "$(MG_VER_FILE_OFFSET)" --flash-opts "$(FLASH_CFG_OPT0),$(FLASH_CFG_OPT1),$(FLASH_CFG_OPT2),$(FLASH_CFG_OPT3)" $(ENCRYPT_EXIP_RAND_ARG) --use-hpm-tool "$(HPM_IMG_UTIL)" || exit /b 1
+	@echo [MG] 生成 .mg 固件包...
+	python "$(ADD_HEADER_SCRIPT)" --input "$(OUTPUT_SECRIT)" --output "$(BIN_DIR)" --auto-name --ver-from "$(OUTPUT_BIN)" --ver-offset $(MG_VER_FILE_OFFSET) --dev-name "$(MG_DEV_NAME)" --dev-type $(MG_DEV_TYPE) --delete-encrypted "$(OUTPUT_SECRIT)" --rename-plain-to-match "$(OUTPUT_BIN)" || exit /b 1
 	@echo ==============================================
-	@echo ✅ 编译成功！
-	@echo 📦 BIN 烧录文件: $(OUTPUT_BIN)
+	@echo ✅ 编译完成  固件与 .mg 同名（仅后缀 .bin / .mg）
 	@echo ==============================================
-	@$(SIZE) $(OUTPUT_ELF)
 
-# 目录
-$(OBJ_BASE) $(BIN_DIR):
-	@if not exist "$@" mkdir "$@"
+# --- make all（全量重编 + copy） ---
+all:
+ifeq ($(strip $(EMBUILD)),)
+	@echo [ERROR] 未找到 emBuild。请安装 SEGGER Embedded Studio，或：
+	@echo   make EMBUILD^="C:\Program Files\SEGGER\SEGGER Embedded Studio 8.xx\bin\emBuild.exe"
+	@exit /b 1
+endif
+	@echo [SES] 全量重编 $(SES_CONFIG)...
+	cd /d "$(SES_STUDIO_DIR)" && "$(EMBUILD)" $(SES_EMBUILD_FLAGS) -rebuild "$(SES_PROJECT_FN)" || exit /b 1
+	@if not exist "$(SES_DEMO_BIN_WIN)" if not exist "$(SES_DEMO_ELF_WIN)" (echo [ERROR] emBuild 未生成 demo.bin / demo.elf。 & exit /b 1)
+	@if not exist "$(BIN_DIR)" mkdir "$(BIN_DIR)"
+	@if exist "$(SES_DEMO_BIN_WIN)" (copy /Y "$(SES_DEMO_BIN_WIN)" "$(OUTPUT_BIN_WIN)" && echo [SES] copied $(SES_DEMO_BIN) -^> $(OUTPUT_BIN)) else if exist "$(SES_DEMO_ELF_WIN)" ("$(OBJCOPY)" -O binary -R .eh_frame -R .eh_frame_hdr "$(SES_DEMO_ELF_WIN)" "$(OUTPUT_BIN_WIN)" && echo [SES] objcopy $(SES_DEMO_ELF) -^> $(OUTPUT_BIN)) else (echo [ERROR] 未找到 demo.bin/demo.elf && exit /b 1)
+	@echo [ENCRYPT] 生成加密镜像（调用 hpm_img_util）...
+	python "$(ENCRYPT_SCRIPT)" --input "$(OUTPUT_BIN)" --output "$(OUTPUT_SECRIT)" --kek "$(ENCRYPT_KEK)" --fw-offset "$(ENCRYPT_FW_OFFSET)" --hdr-offset "$(ENCRYPT_HDR_OFFSET)" --load-addr "$(ENCRYPT_LOAD_ADDR)" --entry "$(ENCRYPT_ENTRY)" --mem-base "$(ENCRYPT_MEM_BASE)" --exip-start "$(ENCRYPT_EXIP_START)" --exip-len "$(ENCRYPT_EXIP_LEN)" --ver-patch-offset "$(MG_VER_FILE_OFFSET)" --flash-opts "$(FLASH_CFG_OPT0),$(FLASH_CFG_OPT1),$(FLASH_CFG_OPT2),$(FLASH_CFG_OPT3)" $(ENCRYPT_EXIP_RAND_ARG) --use-hpm-tool "$(HPM_IMG_UTIL)" || exit /b 1
+	@echo [MG] 生成 .mg 固件包...
+	python "$(ADD_HEADER_SCRIPT)" --input "$(OUTPUT_SECRIT)" --output "$(BIN_DIR)" --auto-name --ver-from "$(OUTPUT_BIN)" --ver-offset $(MG_VER_FILE_OFFSET) --dev-name "$(MG_DEV_NAME)" --dev-type $(MG_DEV_TYPE) --delete-encrypted "$(OUTPUT_SECRIT)" --rename-plain-to-match "$(OUTPUT_BIN)" || exit /b 1
+	@echo ==============================================
+	@echo ✅ 全量重编完成  固件与 .mg 同名（仅后缀 .bin / .mg）
+	@echo ==============================================
 
-# 链接
-$(OUTPUT_ELF): $(ASM_OBJECTS) $(C_OBJECTS) | $(BIN_DIR) $(OBJ_BASE)
-	@echo 🔗 链接中...
-	$(CC) $^ $(LFLAGS) -o $@
-
-$(OBJ_BASE)/portASM.o: $(HAL_DIR)/middleware/FreeRTOS/Source/portable/GCC/RISC-V/portASM.S | $(OBJ_BASE)
-	$(CC) $(ASFLAGS) -c $< -o $@
-
-$(OBJ_BASE)/start.o: $(HAL_DIR)/soc/HPM5300/HPM5361/toolchains/gcc/start.S | $(OBJ_BASE)
-	$(CC) $(ASFLAGS) -c $< -o $@
-
-# C 编译
-$(OBJ_BASE)/%.o: %.c | $(OBJ_BASE)
-	$(CC) $(CFLAGS) -MMD -MP -MF$(OBJ_BASE)/$*.d -c $< -o $@
-
-# 格式转换
-$(OUTPUT_BIN): $(OUTPUT_ELF)
-	$(OBJCOPY) -O binary -R .eh_frame -R .eh_frame_hdr $< $@
-
-$(OUTPUT_HEX): $(OUTPUT_ELF)
-	$(OBJCOPY) -O ihex $< $@
-
-# 清理
+# --- make clean ---
 clean:
-	@if exist "$(BIN_DIR)" rmdir /s /q "$(BIN_DIR)"
-	@if exist "$(OBJ_BASE)" rmdir /s /q "$(OBJ_BASE)"
-	@echo 🧹 清理完成
+	@if exist "$(BIN_DIR_WIN)" rmdir /s /q "$(BIN_DIR_WIN)"
+	@if exist "$(GCC_OBJECTS_WIN)" rmdir /s /q "$(GCC_OBJECTS_WIN)"
+	@if exist "$(SES_OUTPUT_WIN)" rmdir /s /q "$(SES_OUTPUT_WIN)"
+	@echo 已清理 GCC/bin、GCC/Objects、SES IDE Output
 
--include $(DEP_FILES)
+else
+
+# --- make（增量编译 + copy） ---
+build:
+ifeq ($(strip $(EMBUILD)),)
+	@echo '[ERROR] 未找到 emBuild。请设置 PATH、EMBUILD 或 SEGGER_EMBUILD。'
+	@false
+endif
+	@echo '[SES] 增量编译 $(SES_CONFIG)...'
+	cd "$(SES_STUDIO_DIR)" && "$(EMBUILD)" $(SES_EMBUILD_FLAGS) "$(SES_PROJECT_FN)" || exit 1
+	@test -f "$(SES_DEMO_BIN)" || test -f "$(SES_DEMO_ELF)" || (echo '[ERROR] emBuild 未生成 demo.bin/demo.elf' && false)
+	mkdir -p "$(BIN_DIR)"
+	@if [ -f "$(SES_DEMO_BIN)" ]; then \
+		cp -f "$(SES_DEMO_BIN)" "$(OUTPUT_BIN)" && echo "[SES] copied $(SES_DEMO_BIN) -> $(OUTPUT_BIN)"; \
+	elif [ -f "$(SES_DEMO_ELF)" ]; then \
+		"$(OBJCOPY)" -O binary -R .eh_frame -R .eh_frame_hdr "$(SES_DEMO_ELF)" "$(OUTPUT_BIN)" && echo "[SES] objcopy $(SES_DEMO_ELF) -> $(OUTPUT_BIN)"; \
+	else \
+		echo "[ERROR] 未找到 demo.bin/demo.elf"; exit 1; \
+	fi
+	@echo '[ENCRYPT] 生成加密镜像（调用 hpm_img_util via wine）...'
+	python3 "$(ENCRYPT_SCRIPT)" \
+		--input "$(OUTPUT_BIN)" \
+		--output "$(OUTPUT_SECRIT)" \
+		--kek "$(ENCRYPT_KEK)" \
+		--fw-offset "$(ENCRYPT_FW_OFFSET)" \
+		--hdr-offset "$(ENCRYPT_HDR_OFFSET)" \
+		--load-addr "$(ENCRYPT_LOAD_ADDR)" \
+		--entry "$(ENCRYPT_ENTRY)" \
+		--mem-base "$(ENCRYPT_MEM_BASE)" \
+		--exip-start "$(ENCRYPT_EXIP_START)" \
+		--exip-len "$(ENCRYPT_EXIP_LEN)" \
+		--ver-patch-offset "$(MG_VER_FILE_OFFSET)" \
+		--flash-opts "$(FLASH_CFG_OPT0),$(FLASH_CFG_OPT1),$(FLASH_CFG_OPT2),$(FLASH_CFG_OPT3)" \
+		$(ENCRYPT_EXIP_RAND_ARG) \
+		--use-hpm-tool "$(HPM_IMG_UTIL)"
+	@echo '[MG] 生成 .mg 固件包...'
+	python3 "$(ADD_HEADER_SCRIPT)" --input "$(OUTPUT_SECRIT)" --output "$(BIN_DIR)" \
+		--auto-name --ver-from "$(OUTPUT_BIN)" --ver-offset $(MG_VER_FILE_OFFSET) \
+		--dev-name "$(MG_DEV_NAME)" --dev-type $(MG_DEV_TYPE) \
+		--delete-encrypted "$(OUTPUT_SECRIT)" --rename-plain-to-match "$(OUTPUT_BIN)"
+	@echo ==============================================
+	@echo '✅ 编译完成  固件与 .mg 同名（仅后缀 .bin / .mg）'
+	@echo ==============================================
+
+# --- make all（全量重编 + copy） ---
+all:
+ifeq ($(strip $(EMBUILD)),)
+	@echo '[ERROR] 未找到 emBuild。请设置 PATH、EMBUILD 或 SEGGER_EMBUILD。'
+	@false
+endif
+	@echo '[SES] 全量重编 $(SES_CONFIG)...'
+	cd "$(SES_STUDIO_DIR)" && "$(EMBUILD)" $(SES_EMBUILD_FLAGS) -rebuild "$(SES_PROJECT_FN)" || exit 1
+	@test -f "$(SES_DEMO_BIN)" || test -f "$(SES_DEMO_ELF)" || (echo '[ERROR] emBuild 未生成 demo.bin/demo.elf' && false)
+	mkdir -p "$(BIN_DIR)"
+	@if [ -f "$(SES_DEMO_BIN)" ]; then \
+		cp -f "$(SES_DEMO_BIN)" "$(OUTPUT_BIN)" && echo "[SES] copied $(SES_DEMO_BIN) -> $(OUTPUT_BIN)"; \
+	elif [ -f "$(SES_DEMO_ELF)" ]; then \
+		"$(OBJCOPY)" -O binary -R .eh_frame -R .eh_frame_hdr "$(SES_DEMO_ELF)" "$(OUTPUT_BIN)" && echo "[SES] objcopy $(SES_DEMO_ELF) -> $(OUTPUT_BIN)"; \
+	else \
+		echo "[ERROR] 未找到 demo.bin/demo.elf"; exit 1; \
+	fi
+	@echo '[ENCRYPT] 生成加密镜像（调用 hpm_img_util via wine）...'
+	python3 "$(ENCRYPT_SCRIPT)" \
+		--input "$(OUTPUT_BIN)" \
+		--output "$(OUTPUT_SECRIT)" \
+		--kek "$(ENCRYPT_KEK)" \
+		--fw-offset "$(ENCRYPT_FW_OFFSET)" \
+		--hdr-offset "$(ENCRYPT_HDR_OFFSET)" \
+		--load-addr "$(ENCRYPT_LOAD_ADDR)" \
+		--entry "$(ENCRYPT_ENTRY)" \
+		--mem-base "$(ENCRYPT_MEM_BASE)" \
+		--exip-start "$(ENCRYPT_EXIP_START)" \
+		--exip-len "$(ENCRYPT_EXIP_LEN)" \
+		--ver-patch-offset "$(MG_VER_FILE_OFFSET)" \
+		--flash-opts "$(FLASH_CFG_OPT0),$(FLASH_CFG_OPT1),$(FLASH_CFG_OPT2),$(FLASH_CFG_OPT3)" \
+		$(ENCRYPT_EXIP_RAND_ARG) \
+		--use-hpm-tool "$(HPM_IMG_UTIL)"
+	@echo '[MG] 生成 .mg 固件包...'
+	python3 "$(ADD_HEADER_SCRIPT)" --input "$(OUTPUT_SECRIT)" --output "$(BIN_DIR)" \
+		--auto-name --ver-from "$(OUTPUT_BIN)" --ver-offset $(MG_VER_FILE_OFFSET) \
+		--dev-name "$(MG_DEV_NAME)" --dev-type $(MG_DEV_TYPE) \
+		--delete-encrypted "$(OUTPUT_SECRIT)" --rename-plain-to-match "$(OUTPUT_BIN)"
+	@echo ==============================================
+	@echo '✅ 全量重编完成  固件与 .mg 同名（仅后缀 .bin / .mg）'
+	@echo ==============================================
+
+# --- make clean ---
+clean:
+	rm -rf "$(BIN_DIR)" "$(GCC_OBJECTS_DIR)" "$(SES_OUTPUT_DIR)"
+	@echo 已清理 GCC/bin、GCC/Objects、SES IDE Output（若存在）
+
+endif

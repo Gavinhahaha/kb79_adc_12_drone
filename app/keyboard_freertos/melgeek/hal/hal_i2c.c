@@ -120,7 +120,7 @@ hpm_stat_t i2c_handle_dma_transfer_complete(I2C_Type *ptr)
     return status_success;
 }
 
-static void i2c_bus_clear(I2C_Type *ptr)
+static void __attribute__((unused)) i2c_bus_clear(I2C_Type *ptr)
 {
     if (i2c_get_line_scl_status(ptr) == false) {
         DBG_PRINTF("CLK is low, please power cycle the board\n");

@@ -184,7 +184,6 @@ adv_match_t adv_en_disable_key(adv_t *padv)
 {
     uint8_t buf[24] = {0};
     uint8_t key_num = 0;
-    uint8_t size;
 
     while (padv->data.kc[key_num].ty != KCT_NONE)
     {
@@ -306,7 +305,7 @@ int8_t adv_scene_is_pass(adv_t *padv)
     ki = minLevelKi;
     // keyShaftType = cali_cfg.shaftType[ki];
     DBG_PRINTF("scene: minLevelKi: %d, shaftType:%d\n", ki, keyShaftType);
-#warning "debug shaft, todo jay"
+/* TODO: debug shaft, jay */
 
     if (padv->data.trg_sence.trigger < KEY_GENERAL_TRG_ACC(ki) 
     || padv->data.trg_sence.trigger > sw_config_table[keyShaftType].maxLevel 
@@ -469,7 +468,6 @@ adv_match_t adv_tgl(adv_t *padv, uint8_t ki, uint8_t press)
     adv_match_t match = ADV_MATCH_UNSEND;
     uint8_t kcmid = kh.p_st[ki].kcmidNow;
     kc_t kc_tgl   = padv->data.tgl.kc;
-    key_tmp_sta_t *pkts = &gmx.pkts[ki];
 
     
     if (press == KEY_STATUS_D2U)
@@ -609,7 +607,6 @@ void adv_mtp_update_point(adv_t adv, uint8_t id)
 
 void adv_mtp_reload(void)
 {
-    uint8_t kcmid = gbinfo.kc.cur_kcm;
     sk_la_lm_kc_info_t *pdb = &sk_la_lm_kc_info;
     if ((pdb->sk.superkey_table[SKT_ADV].total_size > SK_ADV_NUM) || (pdb->sk.superkey_table[SKT_ADV].free_size > SK_ADV_NUM)|| (pdb->sk.superkey_table[SKT_ADV].storage_mask > 0xff))
     {

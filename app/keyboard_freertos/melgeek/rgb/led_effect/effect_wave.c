@@ -46,6 +46,10 @@ void init_wave(uint8_t ki, led_action_t *pla)
 
 void proc_wave(uint8_t ki, void *pd1, void *pd2, void *pd3)
 {
+    (void)pd1;
+    (void)pd2;
+    (void)pd3;
+
     uint8_t ckrm = gbinfo.kr.cur_krm;
 
     key_tmp_sta_t *pkts = get_key_tmp_sta_ptr(ki);

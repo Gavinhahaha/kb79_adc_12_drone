@@ -92,7 +92,7 @@ static const rgblight_mode mode_id[RGBLIGHT_EFFECT_MAX] = {
     RGBLIGHT_EFFECT_ROTATE,
 };
 
-const uint8_t* rgblight_get_mode_list(void)
+const rgblight_mode *rgblight_get_mode_list(void)
 {
     return mode_id;
 }
@@ -833,8 +833,6 @@ static void rgblight_effect_christmas(animation_status_t *anim, rgblight_ranges_
 /****************** Mode 7: rgbtest **************************/
 static void rgblight_effect_rgbtest(animation_status_t *anim, rgblight_ranges_t *ranges, uint8_t part)
 {
-    const light_tape_config_t config = gbinfo.rl[part].ms[gbinfo.rl[part].md];
-
     if (anim[part].restart)
     {
         anim[part].pos = 0;
@@ -852,7 +850,6 @@ static void rgblight_effect_alternating(animation_status_t *anim, rgblight_range
 {
     const uint16_t section_leds = ranges[part].clipping_col;
     const uint16_t start_pos = ranges[part].effect_start_pos;
-    const uint16_t stop_pos = ranges[part].effect_end_pos;
     const light_tape_config_t config = gbinfo.rl[part].ms[gbinfo.rl[part].md];
     const uint16_t effect_num_leds = section_leds / 2;
 

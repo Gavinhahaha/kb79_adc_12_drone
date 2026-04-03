@@ -4,6 +4,7 @@
  *
  */
 
+ #include <stdint.h>
  #include "board.h"
  #include "hpm_uart_drv.h"
  #include "hpm_sdk_version.h"
@@ -689,4 +690,10 @@
          gpio_set_pin_output_with_initial(BOARD_LIN_TRANSCEIVER_GPIO_CTRL, BOARD_LIN_TRANSCEIVER_GPIO_INDEX, BOARD_LIN_TRANSCEIVER_GPIO_PIN, 0); /* enable transceiver sleep */
      }
  }
- 
+
+/* MG / add_header：从 bin 偏移 0x200 读 FW、HW（LE）；VA 由 flash_xip.icf 固定为 0x80003200 */
+__attribute__((section(".mg_pack_ver"), used))
+static const uint16_t mg_pack_image_ver[2] = {
+    (uint16_t)BOARD_FW_VERSION,
+    (uint16_t)BOARD_HW_VERSION,
+};

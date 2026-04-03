@@ -346,7 +346,7 @@ void cali_set_peek_adc(bool en)
     //cali_check_ready = en;
     DBG_PRINTF("cali_set_peek_adc=%d\n",en);
     vTaskDelay(20);
-    #warning "lqhui todo:need sync from matrix thread!!!"
+    /* TODO(lqhui): need sync from matrix thread */
 }
 
 

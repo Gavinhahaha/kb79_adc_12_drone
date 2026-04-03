@@ -144,7 +144,7 @@ void drv_ws2812_init(void)
     format_config.common_config.cpha = spi_sclk_sampling_even_clk_edges;
     spi_format_init(APP_SPI_BASE, &format_config);
 
-    for (int i = 0; i < BOARD_LIGHT_TAPE_LED_NUM; i++)
+    for (unsigned i = 0; i < (unsigned)BOARD_LIGHT_TAPE_LED_NUM; i++)
     {
         ws2812_convert_data(0, 0, 0, &send_buff[i * RGB_BIT]);
     }

@@ -275,8 +275,6 @@ void feature_dks_set_tick_para(dks_tick_type tickType, uint8_t tickMin, uint8_t 
 
 bool feature_dks_bind(uint8_t kcmid, uint8_t ki, uint8_t paraTableId)
 {
-    bool ret = false;
-
     // if (sk_la_lm_kc_info.sk.superkey_table[SKT_DKS].free_size == KEY_DFT_DKS_PARA_TABLE_MAX || sk_la_lm_kc_info.sk.superkey_table[SKT_DKS].storage_mask == 0)
     // // if(kh.p_qty->dksParaNumber==0)
     // {
@@ -449,6 +447,7 @@ void dks_tick_static_output(void)
     else
     {
         uint16_t ms = (uint16_t)(1.0f / (float)tickTime * 1000.0f);
+        (void)ms;
         //app_timer_start(dksTickTime, /*APP_TIMER_TICKS*/(ms), NULL);
     }
 }
@@ -464,6 +463,7 @@ void dks_tick_random_output(void)
     tickTime = tickMin + rand() % (tickMax - tickMin);
 
     uint16_t ms = (uint16_t)(1.0f / (float)tickTime * 1000.0f);
+    (void)ms;
 
     ms = ms <= 0 ? 1 : ms;
     //app_timer_start(dksTickTime, /*APP_TIMER_TICKS*/(ms), NULL);

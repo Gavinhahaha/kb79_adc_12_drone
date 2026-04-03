@@ -435,7 +435,7 @@ const unsigned char usbd_hid_1_report_descriptor[USBD_IF1_AL0_HID_REPORT_DESC_SI
 
 
 /*!< USBD HID REPORT 2 Descriptor */
-const unsigned char usbd_hid_2_report_descriptor[USBD_IF2_AL0_HID_REPORT_DESC_SIZE] = {
+const unsigned char usbd_hid_2_report_descriptor[USBD_IF2_AL0_HID_REPORT_DESC_SIZE] __attribute__((unused)) = {
     0x05, 0x59,        // Usage Page (0x59)
     0x09, 0x01,        // Usage (0x01)
     0xA1, 0x01,        // Collection (Application)
@@ -734,7 +734,7 @@ static void usbd_hid_if0_out_callback(uint8_t busid, uint8_t ep, uint32_t nbytes
     // usbd_ep_start_write(busid, USBD_IF0_AL0_EP0_ADDR, read0_buffer, nbytes);
 }
 
-static void usbd_hid_if2_in_callback(uint8_t busid, uint8_t ep, uint32_t nbytes)
+static void __attribute__((unused)) usbd_hid_if2_in_callback(uint8_t busid, uint8_t ep, uint32_t nbytes)
 {
     (void)busid;
     (void)ep;
@@ -759,7 +759,7 @@ static struct usbd_endpoint intf1_ep1_out = {
     .ep_cb = usbd_hid_custom_out_callback,
     .ep_addr = USBD_IF1_AL0_EP1_ADDR};
 
-static struct usbd_endpoint intf2_ep0_in = {
+static struct usbd_endpoint intf2_ep0_in __attribute__((unused)) = {
     .ep_cb = usbd_hid_if2_in_callback,
     .ep_addr = USBD_IF2_AL0_EP0_ADDR};
 
@@ -772,7 +772,7 @@ struct usbd_interface intf0;
 
 struct usbd_interface intf1;
 
-struct usbd_interface intf2;
+struct usbd_interface intf2 __attribute__((unused));
 
 
 void hal_hid_set_sof_callback(PFN_HID_SOF_CALLBACK pfn_cb)

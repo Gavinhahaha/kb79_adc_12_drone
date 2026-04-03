@@ -2240,6 +2240,9 @@ static uint32_t on_la_write_la(uint16_t len, uint16_t reserve, uint8_t *pdata)
 #ifdef LB_ENABLED
 static uint32_t on_lb_back_get_state(uint16_t len, uint16_t reserve, uint8_t *pdata)
 {
+    (void)len;
+    (void)pdata;
+
     uint8_t state = gbinfo.rl[LIGHT_TAPE_PART_BACK].state;
 
     cmd_do_response(CMD_LB_BACK, LB_BACK_GET_SATE, sizeof(state), reserve, &state);
@@ -2248,6 +2251,8 @@ static uint32_t on_lb_back_get_state(uint16_t len, uint16_t reserve, uint8_t *pd
 
 static uint32_t on_lb_back_set_state(uint16_t len, uint16_t reserve, uint8_t *pdata)
 {
+    (void)len;
+
     uint32_t e = HIVE_SUCCESS;
 
     gbinfo.rl[LIGHT_TAPE_PART_BACK].state = pdata[0];
@@ -2260,6 +2265,7 @@ static uint32_t on_lb_back_set_state(uint16_t len, uint16_t reserve, uint8_t *pd
 
 static uint32_t on_lb_back_get_para(uint16_t len, uint16_t reserve, uint8_t *pdata)
 {
+    (void)reserve;
 
     uint8_t buf[4 + RGBLIGHT_EFFECT_MAX*4] = {0};
     uint8_t buf_len = 0;
@@ -2359,7 +2365,7 @@ static uint32_t on_lb_back_get_list_id(uint16_t len, uint16_t reserve, uint8_t *
 
     uint8_t buf[RGBLIGHT_EFFECT_MAX] = {0};
 
-    const uint8_t* list = rgblight_get_mode_list();
+    const rgblight_mode *list = rgblight_get_mode_list();
     memcpy(buf, list, sizeof(buf));
 
     return cmd_do_response(CMD_LB_BACK, LB_BACK_SET_LIST_ID, sizeof(buf), 0, buf);
@@ -2530,7 +2536,7 @@ static uint32_t on_lb_side_get_list_id(uint16_t len, uint16_t reserve, uint8_t *
 
     uint8_t buf[RGBLIGHT_EFFECT_MAX] = {0};
 
-    const uint8_t* list = rgblight_get_mode_list();
+    const rgblight_mode *list = rgblight_get_mode_list();
     memcpy(buf, list, sizeof(buf));
 
     return cmd_do_response(CMD_LB_SIDE, LB_SIDE_SET_LIST_ID, sizeof(buf), 0, buf);

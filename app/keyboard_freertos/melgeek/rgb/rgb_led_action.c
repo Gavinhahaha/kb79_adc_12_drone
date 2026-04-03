@@ -700,7 +700,7 @@ static void state_sync_rgb_proc(void)
 
     if (g_sm_ctx.frame_toogle)
     {
-        bool ret = led_update_frame(INTERRUPT_MODE);
+        led_update_frame(INTERRUPT_MODE);
         // led_set_update_state(ret ? STATE_IDLE : STATE_READY);
     }
     g_sm_ctx.frame_toogle = !g_sm_ctx.frame_toogle;

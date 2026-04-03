@@ -59,9 +59,6 @@
 
 #include "portContext.h"
 
-//#define portasmDISABLE_INTERRUPT_VECTORS 1
-
-
 #if !defined(USE_NONVECTOR_MODE) || (USE_NONVECTOR_MODE == 0)
 #include "freertos_hpmicro_vectors.h"
 #endif

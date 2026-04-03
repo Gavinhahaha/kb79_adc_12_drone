@@ -1892,6 +1892,8 @@ ERROR:
 #if 1
 uint16_t ks_cmd_set_dks_para_table(uint8_t *reveBuffer, uint16_t reveBufferSize, uint8_t *respBuffer, uint16_t respBufferSize, uint16_t *respLenght)
 {
+    (void)respBufferSize;
+
     uint16_t ret = true;
     ModuleUartCmdSetAdvTriggerDksMsg_t *msg = (ModuleUartCmdSetAdvTriggerDksMsg_t *)reveBuffer; /* get cmd msg */
     #if defined(LOG_SET_DKS) && (LOG_SET_DKS == 1)  
@@ -2148,8 +2150,8 @@ uint16_t ks_cmd_get_dks_para_table(uint8_t *reveBuffer, uint16_t reveBufferSize,
     uint8_t getWay            = msg->key.msg.way;
     //uint8_t ki                = 0;
     uint8_t keysw      = KEY_DFT_SHAFT;
-    #warning "debug shaft, todo jay"
-    
+    /* TODO: debug shaft, jay */
+
     if (reveBufferSize < 2)
     {
         respResult = 0xFF;

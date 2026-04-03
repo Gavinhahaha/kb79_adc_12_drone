@@ -7,6 +7,7 @@
 #include "mg_factory.h"
 #include "app_debug.h"
 #include "hal_flash.h"
+#include "hal_wdg.h"
 
 #if DEBUG_EN == 1
 #define MODULE_LOG_ENABLED (1)
